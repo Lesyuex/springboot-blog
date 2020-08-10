@@ -8,7 +8,6 @@ import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.vo.MenuVO;
 import com.jobeth.blog.vo.JsonResultVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
