@@ -1,8 +1,8 @@
 package com.jobeth.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.jobeth.blog.common.Constant;
 import com.jobeth.blog.common.utils.TreeUtil;
+import com.jobeth.blog.config.CommonConfigProperties;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.vo.MenuVO;
@@ -27,10 +27,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/permission")
-public class PermissionController {
+public class PermissionController extends BaseController {
+    private final CommonConfigProperties properties;
+    private final PermissionService permissionService;
 
-    @Autowired
-    private PermissionService permissionService;
+    public PermissionController(CommonConfigProperties properties, PermissionService permissionService) {
+        this.properties = properties;
+        this.permissionService = permissionService;
+    }
 
     @GetMapping("/list")
     public JsonResultVO<List<MenuVO>> list() {
@@ -43,7 +47,7 @@ public class PermissionController {
             BeanUtils.copyProperties(permission, menuVO);
             menuVOList.add(menuVO);
         }
-        List<MenuVO> treeVOList = TreeUtil.generateTree(menuVOList,Constant.ROOT_MENU);
+        List<MenuVO> treeVOList = TreeUtil.generateTree(menuVOList, properties.getRootMenuId());
         return new JsonResultVO<>(treeVOList);
     }
 }

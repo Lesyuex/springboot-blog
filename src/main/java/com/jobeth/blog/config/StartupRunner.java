@@ -40,10 +40,8 @@ public class StartupRunner implements CommandLineRunner {
     @Override
     @SuppressWarnings("unchecked")
     public void run(String... args) {
-        //清除相关keys
-        /*log.info("【 权限配置清除...... 】");
-        redisService.deleteByPrefix(properties.getRedisUrlPermKey() + "*");*/
-        redisService.deleteByPrefix("*");
+        redisService.deleteByPrefix(properties.getRedisUrlPermKey() + "*");
+        redisService.deleteByPrefix(properties.getRedisBlogPrefix() + "*");
         ///加载权限配置
         LambdaQueryWrapper<Permission> wrapper = new QueryWrapper<Permission>()
                 .lambda().eq(Permission::getType, 0)

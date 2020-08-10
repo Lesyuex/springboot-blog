@@ -1,6 +1,8 @@
 package com.jobeth.blog.common.helper;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.jobeth.blog.common.exception.ServerException;
+import com.jobeth.blog.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,11 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisHelper {
 
-    private final static RedisTemplate<String,Object> redisTemplate = SpringContextHelper.getBean("redisTemplate");
-
-    public static void sout() {
-        System.out.println(redisTemplate);
-    }
+    private final static RedisTemplate<String, Object> redisTemplate = SpringContextHelper.getBean("redisTemplate");
 
     /**
      * 保存key - value
@@ -34,18 +32,16 @@ public class RedisHelper {
      * @return boolean
      */
     public static boolean set(String key, Object val) {
-        boolean success = false;
         ValueOperations<String, Object> operations = null;
         try {
             operations = redisTemplate.opsForValue();
             operations.set(key, val);
-            success = true;
             log.info("【 key => {} 数据存入Redis缓存成功 】", key);
+            return true;
         } catch (Exception e) {
             log.error("【 key => {} 数据存入redis缓存发生错误 -】", key, e);
+            return false;
         }
-        return success;
-
     }
 
     /**
@@ -75,6 +71,9 @@ public class RedisHelper {
      */
     public static boolean exists(String key) {
         try {
+            if (StringUtils.isNullOrEmpty(key)){
+                throw new ServerException("Redis key is null");
+            }
             return redisTemplate.hasKey(key);
         } catch (Exception e) {
             log.error("【 从 Redis 查找 key => {} 缓存数据时发生错误 -】", key, e);

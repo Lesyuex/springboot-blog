@@ -26,8 +26,8 @@ public class PreDestroy implements ExitCodeGenerator, DisposableBean {
     @Override
     public void destroy() throws Exception {
         //清除相关keys
-        log.info("权限配置清除......");
-        redisService.deleteByPrefix(properties.getRedisUrlPermKey() + "*");
+        log.info("【 调用了 PreDestroy 的 destroy() 方法 】");
+        ///redisService.deleteByPrefix(properties.getRedisUrlPermKey() + "*");
     }
 
     @Override

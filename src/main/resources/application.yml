@@ -24,13 +24,26 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:mapper/*xml
 common:
+  #jwt密钥
   jwt-secret: blogSecret
-  jwt-tokenName: BLOG-TOKEN
+  #jwt Token 名字
+  jwt-tokenName: BLOG_TOKEN
+  #jwt 前缀
   jwt-token-prefix: Jobeth_Blog_
+  #jwt 过期时间
   jwt-expiration: 3000000
+  #jwt 刷新时间
   jwt-refresh-time: 60000
-  redis-url-perm-key: url_perm
-  ant-matcher: /sys/login,/sys/logout
+  #jwt 不拦截的请求
+  ant-matcher: /sys/login,/sys/logout,
+  #系统权限配置缓存Redis key
+  redis-url-perm-key: redis_url_perm
+  #系统 根菜单标志
+  root-menu-id: 0
+  #blog 博客文章缓存Redis key 前缀
+  redis-blog-prefix: redis_blog_
+  #blog 博客缓存时间
+  blog-cache-time: 3600000
 server:
   port: 7070
   # 打印sql

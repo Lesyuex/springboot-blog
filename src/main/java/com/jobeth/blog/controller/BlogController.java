@@ -2,15 +2,16 @@ package com.jobeth.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.jobeth.blog.common.Constant;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.helper.RedisHelper;
 import com.jobeth.blog.common.utils.JsonUtil;
+import com.jobeth.blog.config.CommonConfigProperties;
 import com.jobeth.blog.po.Blog;
 import com.jobeth.blog.service.BlogService;
 import com.jobeth.blog.vo.JsonResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,9 +27,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BlogController extends BaseController {
     private final BlogService blogService;
+    private final CommonConfigProperties properties;
 
-    public BlogController(BlogService blogService) {
+    public BlogController(BlogService blogService, CommonConfigProperties properties) {
         this.blogService = blogService;
+        this.properties = properties;
     }
 
     /**
@@ -55,26 +58,7 @@ public class BlogController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Blog blog) {
-        log.info(JsonUtil.objectToJson(blog));
-        return new JsonResultVO<>();
-    }
-
-    @PutMapping("/updateById")
-    public JsonResultVO<Object> updateById(@RequestBody Blog blog) {
-        RedisHelper.sout();
-        //根据id进行更新，没有传值的属性就不会更新
-        boolean success = blogService.updateById(blog);
-
-        if (success) {
-            String key = Constant.BLOG_REDIS_KEY_PREFIX + blog.getId();
-            RedisHelper.remove(key);
-            Blog blog1 = blogService.getById(blog.getId());
-            String s = JsonUtil.objectToJson(blog1);
-            log.info(s);
-            return new JsonResultVO<>();
-        } else {
-            return new JsonResultVO<>(ResultEnum.ERROR);
-        }
+        return blogService.save(blog) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**
@@ -92,13 +76,10 @@ public class BlogController extends BaseController {
                 .eq(Blog::getId, blog.getId());
         //不写set时传入entity
         boolean success = blogService.update(blog, update);
-
+        ///boolean success =  blogService.updateById(blog);
         if (success) {
-            String key = Constant.BLOG_REDIS_KEY_PREFIX + blog.getId();
+            String key = properties.getRedisBlogPrefix() + blog.getId();
             RedisHelper.remove(key);
-            Blog blog1 = blogService.getById(blog.getId());
-            String s = JsonUtil.objectToJson(blog1);
-            log.info(s);
             return new JsonResultVO<>();
         } else {
             return new JsonResultVO<>(ResultEnum.ERROR);
@@ -113,6 +94,6 @@ public class BlogController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Integer id) {
-        return new JsonResultVO<>();
+        return blogService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 }

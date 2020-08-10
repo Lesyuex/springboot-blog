@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 /**
  * Desc
  *
@@ -44,6 +46,24 @@ public class CommonConfigProperties {
      * 不需要认证的接口
      */
     public String antMatcher;
+
+    /**
+     * 顶级菜单标识
+     */
+    public String rootMenuId;
+    /**
+     * jwt的唯一身份标识
+     */
+    public String jwtId = UUID.randomUUID().toString();
+
+    /**
+     * 博客缓存在Redis的前缀
+     */
+    public String redisBlogPrefix;
+    /**
+     * 文章缓存时间
+     */
+    public Long blogCacheTime;
 
 }
 

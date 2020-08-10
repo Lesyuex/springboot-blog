@@ -1,6 +1,5 @@
 package com.jobeth.blog.common.utils;
 
-import com.jobeth.blog.common.Constant;
 import com.jobeth.blog.common.helper.SpringContextHelper;
 import com.jobeth.blog.config.CommonConfigProperties;
 import io.jsonwebtoken.*;
@@ -37,7 +36,7 @@ public class JwtUtil {
                     // 创建payload的私有声明
                     .setClaims(claim)
                     // 放入用户名和用户ID
-                    .setId(Constant.JWT_ID)
+                    .setId(PROPERTIES.getJwtId())
                     .setSubject(userId)
                     // 失效时间
                     .setExpiration(date)
