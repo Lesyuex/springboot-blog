@@ -1,10 +1,9 @@
 package com.jobeth.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.jobeth.blog.common.utils.JsonUtil;
+import com.jobeth.blog.common.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -70,6 +69,7 @@ public class RedisService {
             log.info("【 key => {} 数据存入redis缓存成功,失效时间：{} 】", key, date);
         } catch (Exception e) {
             log.error("【 key => {} 数据存入redis缓存发生错误 -】", key, e);
+            throw e;
         }
     }
 
@@ -141,7 +141,7 @@ public class RedisService {
     public <T> T get(String key, Class<T> clazz) {
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         String json = operations.get(key);
-        T t = JsonUtil.jsonToPojo(json, clazz);
+        T t = JacksonUtil.jsonToPojo(json, clazz);
         return t;
     }
 }

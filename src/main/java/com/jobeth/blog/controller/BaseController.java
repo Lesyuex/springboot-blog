@@ -1,6 +1,7 @@
 package com.jobeth.blog.controller;
 
-import lombok.extern.slf4j.Slf4j;
+
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020/7/7 9:54
  */
 @RestController
-public abstract class BaseController {
+public abstract class BaseController{
     protected HttpServletRequest httpServletRequest;
     protected HttpServletResponse httpServletResponse;
 

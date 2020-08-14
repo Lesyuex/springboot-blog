@@ -1,12 +1,8 @@
 package com.jobeth.blog.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.jobeth.blog.common.enums.ResultEnum;
-import com.jobeth.blog.common.exception.ServerException;
-
-import com.jobeth.blog.common.utils.JsonUtil;
 
 import com.jobeth.blog.po.User;
 import com.jobeth.blog.service.UserService;

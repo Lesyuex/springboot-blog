@@ -1,6 +1,6 @@
 package com.jobeth.blog.config.shiro;
 
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.service.impl.RedisService;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -27,9 +27,9 @@ public class ShiroConfig {
     private final RedisService redisService;
     private final PermissionService permissionService;
 
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
 
-    public ShiroConfig(RedisService redisService, PermissionService permissionService, CommonConfigProperties properties) {
+    public ShiroConfig(RedisService redisService, PermissionService permissionService, BlogProperties properties) {
         this.redisService = redisService;
         this.permissionService = permissionService;
         this.properties = properties;

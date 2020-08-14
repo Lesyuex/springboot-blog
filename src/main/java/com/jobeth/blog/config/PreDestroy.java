@@ -1,5 +1,6 @@
 package com.jobeth.blog.config;
 
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.service.impl.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class PreDestroy implements ExitCodeGenerator, DisposableBean {
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
     private final RedisService redisService;
 
-    public PreDestroy(RedisService redisService, CommonConfigProperties properties) {
+    public PreDestroy(RedisService redisService, BlogProperties properties) {
         this.redisService = redisService;
         this.properties = properties;
     }

@@ -42,8 +42,8 @@ public class ResponseUtil {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            out.write(JsonUtil.objectToJson(object) + "");
-            log.info("【 ResponseJson - {} 】", JsonUtil.objectToJson(object));
+            out.write(JacksonUtil.objectToJson(object) + "");
+            log.info("【 ResponseJson - {} 】", JacksonUtil.objectToJson(object));
         } catch (Exception e) {
             log.error("【 ResponseJson - 发生错误- {} 】", e.getMessage());
         } finally {

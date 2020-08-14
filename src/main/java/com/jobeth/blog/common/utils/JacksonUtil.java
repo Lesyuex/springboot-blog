@@ -14,7 +14,8 @@ import java.util.Map;
  * @author Jobeth
  * @date Created by IntelliJ IDEA on 11:34 2020/4/10
  */
-public class JsonUtil {
+public class JacksonUtil {
+    public static ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) throws Exception {
         Map<String, Object> map = new HashMap<>();
@@ -32,7 +33,6 @@ public class JsonUtil {
      * @return String
      */
     public static String objectToJson(Object data) {
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
@@ -48,7 +48,6 @@ public class JsonUtil {
      * @return T
      */
     public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(jsonData, beanType);
         } catch (Exception e) {
@@ -64,7 +63,6 @@ public class JsonUtil {
      * @return List<beanType>
      */
     public static <T> List<T> jsonToList(String json, Class<T> beanType) {
-        ObjectMapper mapper = new ObjectMapper();
         JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, beanType);
         try {
             return mapper.readValue(json, javaType);

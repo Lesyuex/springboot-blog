@@ -3,10 +3,10 @@ package com.jobeth.blog.controller.system;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
-import com.jobeth.blog.common.utils.JsonUtil;
+import com.jobeth.blog.common.utils.JacksonUtil;
 import com.jobeth.blog.common.utils.JwtUtil;
 
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.controller.BaseController;
 import com.jobeth.blog.dto.UserDTO;
 import com.jobeth.blog.po.User;
@@ -14,7 +14,6 @@ import com.jobeth.blog.service.UserService;
 import com.jobeth.blog.service.impl.RedisService;
 import com.jobeth.blog.vo.JsonResultVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -31,17 +30,17 @@ public class SystemController extends BaseController {
 
     private final UserService userService;
     private final RedisService redisService;
-    @Autowired
-    private CommonConfigProperties properties;
+    private final BlogProperties properties;
 
-    public SystemController(UserService userService, RedisService redisService) {
+    public SystemController(UserService userService, RedisService redisService, BlogProperties properties) {
         this.userService = userService;
         this.redisService = redisService;
+        this.properties = properties;
     }
 
     @PostMapping("/login")
     public JsonResultVO<String> login(@RequestBody UserDTO userDTO) {
-        log.info("用户登录-{}", JsonUtil.objectToJson(userDTO));
+        log.info("用户登录-{}", JacksonUtil.objectToJson(userDTO));
         User user = userService.getOne(new QueryWrapper<User>().eq("username", userDTO.getUsername()));
         //用户不存在或密码不一致
         if (user == null || !user.getPassword().equals(userDTO.getPassword())) {

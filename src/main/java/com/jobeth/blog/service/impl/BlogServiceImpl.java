@@ -1,12 +1,11 @@
 package com.jobeth.blog.service.impl;
 
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.po.Blog;
 import com.jobeth.blog.mapper.BlogMapper;
 import com.jobeth.blog.service.BlogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -23,9 +22,9 @@ import java.io.Serializable;
 @Slf4j
 public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements BlogService {
     private final RedisService redisService;
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
 
-    public BlogServiceImpl(RedisService redisService, CommonConfigProperties properties) {
+    public BlogServiceImpl(RedisService redisService, BlogProperties properties) {
         this.redisService = redisService;
         this.properties = properties;
     }

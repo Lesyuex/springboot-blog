@@ -2,7 +2,7 @@ package com.jobeth.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jobeth.blog.common.utils.TreeUtil;
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.vo.MenuVO;
@@ -27,10 +27,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/permission")
 public class PermissionController extends BaseController {
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
     private final PermissionService permissionService;
 
-    public PermissionController(CommonConfigProperties properties, PermissionService permissionService) {
+    public PermissionController(BlogProperties properties, PermissionService permissionService) {
         this.properties = properties;
         this.permissionService = permissionService;
     }

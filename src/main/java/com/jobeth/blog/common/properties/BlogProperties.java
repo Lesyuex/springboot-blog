@@ -1,4 +1,4 @@
-package com.jobeth.blog.config;
+package com.jobeth.blog.common.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,9 +13,7 @@ import java.util.UUID;
  * @since 2020/6/30 16:27
  */
 @Data
-@Component
-@ConfigurationProperties(prefix = "common")
-public class CommonConfigProperties {
+public class BlogProperties {
 
     /**
      * JWT密钥KEY

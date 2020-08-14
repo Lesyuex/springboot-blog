@@ -18,8 +18,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  * @since 2020/4/30 16:12
  */
 @RestControllerAdvice
-@Slf4j
-public class GlobalExceptionHandler {
+public class GlobalExceptionControllerAdvice {
 
     /***
      * 自定义异常
@@ -50,5 +49,4 @@ public class GlobalExceptionHandler {
             return new JsonResultVO<>(ResultEnum.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

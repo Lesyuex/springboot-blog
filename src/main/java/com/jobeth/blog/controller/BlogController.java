@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.helper.RedisHelper;
-import com.jobeth.blog.common.utils.JsonUtil;
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.utils.JacksonUtil;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.po.Blog;
 import com.jobeth.blog.service.BlogService;
 import com.jobeth.blog.vo.JsonResultVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -27,9 +26,9 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BlogController extends BaseController {
     private final BlogService blogService;
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
 
-    public BlogController(BlogService blogService, CommonConfigProperties properties) {
+    public BlogController(BlogService blogService, BlogProperties properties) {
         this.blogService = blogService;
         this.properties = properties;
     }
@@ -69,7 +68,7 @@ public class BlogController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Blog blog) {
-        log.info(JsonUtil.objectToJson(blog));
+        log.info(JacksonUtil.objectToJson(blog));
         //方法1
         //根据id更新title字段
         LambdaUpdateWrapper<Blog> update = new UpdateWrapper<Blog>().lambda()

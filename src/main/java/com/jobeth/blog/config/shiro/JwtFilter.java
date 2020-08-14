@@ -8,7 +8,7 @@ import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.utils.JwtUtil;
 import com.jobeth.blog.common.utils.ResponseUtil;
 
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.service.impl.RedisService;
@@ -43,10 +43,10 @@ import java.util.Set;
 public class JwtFilter extends BasicHttpAuthenticationFilter {
     private final RedisService redisService;
     private final PermissionService permissionService;
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
     PatternMatcher patternMatcher = new AntPathMatcher();
 
-    public JwtFilter(RedisService redisService, PermissionService permissionService, CommonConfigProperties properties) {
+    public JwtFilter(RedisService redisService, PermissionService permissionService, BlogProperties properties) {
         this.redisService = redisService;
         this.permissionService = permissionService;
         this.properties = properties;

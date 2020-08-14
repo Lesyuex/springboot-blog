@@ -2,7 +2,7 @@ package com.jobeth.blog.config.shiro;
 
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.utils.JwtUtil;
-import com.jobeth.blog.config.CommonConfigProperties;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.dto.PermissionDTO;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
@@ -34,7 +34,7 @@ public class JwtRealm extends AuthorizingRealm {
     private PermissionService permissionService;
 
     @Autowired
-    private CommonConfigProperties properties;
+    private BlogProperties properties;
 
     /**
      * 是否支持JwtToken认证

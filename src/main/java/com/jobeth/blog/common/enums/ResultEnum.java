@@ -22,11 +22,11 @@ public enum ResultEnum {
     /**
      * 服务器内部错误
      */
-    INTERNAL_SERVER_ERROR(500, "服务器内部错误"),
+    INTERNAL_SERVER_ERROR(500, "服务器发生错误..."),
     /**
      * 请求参数错误
      */
-    REQUEST_PARAMETER_ERROR(501, "请求参数错误"),
+    REQUEST_PARAMETER_ERROR(501, "请求参数错误！"),
     /**
      * 未登录
      */
@@ -34,15 +34,15 @@ public enum ResultEnum {
     /**
      * 登录失败
      */
-    USER_LOGIN_FAIL(505, "用户不存在或密码不一致"),
+    USER_LOGIN_FAIL(505, "请检查用户名或用户密码！"),
     /**
      * Token过期或者无效
      */
-    USER_TOKEN_INVALID(502, "用户Token过期或无效"),
+    USER_TOKEN_INVALID(502, "用户Token过期或无效！"),
     /**
      * 没有权限
      */
-    USER_ACCESS_DENIED(507, "无权限访问"),
+    USER_ACCESS_DENIED(507, "权限不足！"),
 
     /**
      * 系统无此资源
@@ -51,19 +51,19 @@ public enum ResultEnum {
     /**
      * 访问地址有误
      */
-    CHECK_REQUEST_URL(997, "检查访问地址"),
+    CHECK_REQUEST_URL(997, "不存在的访问地址！"),
     /**
      * 访问方式有误
      */
-    CHECK_REQUEST_METHOD(998, "检查访问方式"),
+    CHECK_REQUEST_METHOD(998, "不支持的访问方式！"),
     /**
      * 未知
      */
-    UNKNOWN(999, "未知");
+    UNKNOWN(999, "未知...");
 
 
-    private Integer code;
-    private String message;
+    private final Integer code;
+    private final String message;
 
     ResultEnum(Integer code, String message) {
         this.code = code;

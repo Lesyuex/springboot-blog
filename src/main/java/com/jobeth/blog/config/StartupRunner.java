@@ -2,6 +2,7 @@ package com.jobeth.blog.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.service.impl.RedisService;
@@ -29,9 +30,9 @@ public class StartupRunner implements CommandLineRunner {
 
     private final PermissionService permissionService;
     private final RedisService redisService;
-    private final CommonConfigProperties properties;
+    private final BlogProperties properties;
 
-    public StartupRunner(PermissionService permissionService, RedisService redisService, CommonConfigProperties properties) {
+    public StartupRunner(PermissionService permissionService, RedisService redisService, BlogProperties properties) {
         this.permissionService = permissionService;
         this.redisService = redisService;
         this.properties = properties;
