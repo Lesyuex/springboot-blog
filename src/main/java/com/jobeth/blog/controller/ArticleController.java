@@ -8,15 +8,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.utils.StringUtils;
-import com.jobeth.blog.common.utils.WebHttpUtil;
 import com.jobeth.blog.po.Article;
 import com.jobeth.blog.service.ArticleService;
 import com.jobeth.blog.vo.JsonResultVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
@@ -44,7 +40,12 @@ public class ArticleController extends BaseController {
      */
     @GetMapping("/get/{id}")
     public JsonResultVO<Article> get(@PathVariable Integer id) {
-        return new JsonResultVO<>();
+        Article article = articleService.getById(id);
+        if (article == null) {
+            String exceptionMsg = "【 文章ID => " + id + " 不存在 】";
+            throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE, exceptionMsg);
+        }
+        return new JsonResultVO<>(article);
     }
 
     /**
@@ -55,7 +56,7 @@ public class ArticleController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Article article) {
-        return new JsonResultVO<>();
+        return articleService.save(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**
@@ -66,7 +67,7 @@ public class ArticleController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Article article) {
-        return new JsonResultVO<>();
+        return articleService.updateById(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**

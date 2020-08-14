@@ -1,8 +1,10 @@
 package com.jobeth.blog.controller;
 
 
-import com.jobeth.blog.po.Meta;
+import com.jobeth.blog.common.enums.ResultEnum;
+import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.po.Role;
+import com.jobeth.blog.service.RoleService;
 import com.jobeth.blog.vo.JsonResultVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,12 @@ import java.util.List;
 @RequestMapping("/role")
 public class RoleController {
 
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
     /**
      * 根据id 查询
      *
@@ -28,7 +36,12 @@ public class RoleController {
      */
     @GetMapping("/get/{id}")
     public JsonResultVO<Role> get(@PathVariable Integer id) {
-        return new JsonResultVO<>();
+        Role role = roleService.getById(id);
+        if (role == null) {
+            String exceptionMsg = "【 角色ID => " + id + " 不存在 】";
+            throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE, exceptionMsg);
+        }
+        return new JsonResultVO<>(role);
     }
 
     /**
@@ -39,7 +52,7 @@ public class RoleController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Role role) {
-        return new JsonResultVO<>();
+        return roleService.save(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**
@@ -49,8 +62,8 @@ public class RoleController {
      * @return 更新结果
      */
     @PutMapping("/update")
-    public JsonResultVO<Object> update(@RequestBody  Role role) {
-        return new JsonResultVO<>();
+    public JsonResultVO<Object> update(@RequestBody Role role) {
+        return roleService.updateById(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**
@@ -60,8 +73,8 @@ public class RoleController {
      * @return 删除结果
      */
     @DeleteMapping("/delete/{id}")
-    public JsonResultVO<Meta> delete(@PathVariable Integer id) {
-        return new JsonResultVO<>();
+    public JsonResultVO<Object> delete(@PathVariable Integer id) {
+        return roleService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     /**
@@ -71,7 +84,7 @@ public class RoleController {
      * @return 列表数据
      */
     @GetMapping("/list")
-    public JsonResultVO<List<Role>> list(@RequestBody  Role role) {
+    public JsonResultVO<List<Role>> list(@RequestBody Role role) {
         return new JsonResultVO<>();
     }
 }
