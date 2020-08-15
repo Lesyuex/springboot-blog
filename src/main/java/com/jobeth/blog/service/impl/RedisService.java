@@ -1,6 +1,7 @@
 package com.jobeth.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.jobeth.blog.common.utils.DateUtil;
 import com.jobeth.blog.common.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class RedisService {
             operations.set(key, value);
             redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
             Date date = new Date(Clock.systemDefaultZone().millis() + expireTime);
-            log.info("【 key => {} 数据存入redis缓存成功,失效时间：{} 】", key, date);
+            log.info("【 key => {} 数据存入redis缓存成功,失效时间：{} 】", key,  DateUtil.dateString(date));
         } catch (Exception e) {
             log.error("【 key => {} 数据存入redis缓存发生错误 -】", key, e);
             throw e;

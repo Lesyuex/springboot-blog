@@ -38,15 +38,15 @@ public class SystemController extends BaseController {
         this.properties = properties;
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public JsonResultVO<String> login(@RequestBody UserDTO userDTO) {
-        log.info("用户登录-{}", JacksonUtil.objectToJson(userDTO));
+        log.info("【 用户登录-{} 】", JacksonUtil.objectToJson(userDTO));
         User user = userService.getOne(new QueryWrapper<User>().eq("username", userDTO.getUsername()));
         //用户不存在或密码不一致
         if (user == null || !user.getPassword().equals(userDTO.getPassword())) {
             throw new ServerException(ResultEnum.USER_LOGIN_FAIL);
         }
-        log.info("用户校验成功，开始生成用户Token......");
+        log.info("【 用户校验成功，开始生成用户Token...... 】");
         //生成JwtToken
         String token = JwtUtil.generateToken(user.getId().toString());
         if (token == null) {
@@ -58,7 +58,7 @@ public class SystemController extends BaseController {
         try {
             redisService.setExpire(redisKey, redisToken, properties.getJwtExpiration());
         } catch (Exception e) {
-            log.error("用户登录-服务器内部错误：{}", e.getMessage());
+            log.error("【 用户登录-服务器内部错误 】", e);
             throw new ServerException(ResultEnum.INTERNAL_SERVER_ERROR);
         }
         return new JsonResultVO<>(redisToken);

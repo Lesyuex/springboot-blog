@@ -43,9 +43,9 @@ public class JwtUtil {
                     // 签名算法和密钥
                     .signWith(SignatureAlgorithm.HS512, PROPERTIES.getJwtSecret())
                     .compact();
-            log.info("用户Token生成成功,失效时间：{}", date);
+            log.info("【 用户Token生成成功,失效时间：{} 】", DateUtil.dateString(date));
         } catch (Exception e) {
-            log.error("用户Token生成失败-", e);
+            log.error("【 用户Token生成失败 】 ", e);
         }
         return token;
     }
