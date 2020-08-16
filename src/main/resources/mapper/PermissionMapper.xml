@@ -5,11 +5,14 @@
             resultType="com.jobeth.blog.po.Permission">
         SELECT
         p.id,
-        p.NAME,
-        p.url,
-        p.permission
-        FROM
-        t_permission p
+        p.parent_id,
+        p.name,
+        p.path,
+        p.perm,
+        p.title,
+        p.component,
+        p.icon
+        from t_permission p
         LEFT JOIN t_roles_permissions rp ON p.id = rp.perm_id
         LEFT JOIN t_users_roles ur ON rp.role_id = ur.role_id
         <where>
@@ -26,6 +29,6 @@
                 and p.status = #{status,jdbcType=TINYINT}
             </if>
         </where>
-        GROUP BY p.url
+        GROUP BY p.path
     </select>
 </mapper>

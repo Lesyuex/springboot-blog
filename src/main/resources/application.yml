@@ -27,7 +27,7 @@ common:
   #jwt密钥
   jwt-secret: blogSecret
   #jwt Token 名字
-  jwt-tokenName: BLOG_TOKEN
+  jwt-tokenName: BLOG-TOKEN
   #jwt 前缀
   jwt-token-prefix: Jobeth_Blog_
   #jwt 过期时间
@@ -46,7 +46,9 @@ common:
   blog-cache-time: 3600000
 server:
   port: 7070
-  # 打印sql
+  servlet:
+    context-path: /blog
+# 打印sql
 logging:
   level:
     com.jobeth.perm.mapper: debug

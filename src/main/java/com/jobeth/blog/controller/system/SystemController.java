@@ -39,7 +39,7 @@ public class SystemController extends BaseController {
     }
 
     @GetMapping("/login")
-    public JsonResultVO<String> login(@RequestBody UserDTO userDTO) {
+    public JsonResultVO<String> login( UserDTO userDTO) {
         log.info("【 用户登录-{} 】", JacksonUtil.objectToJson(userDTO));
         User user = userService.getOne(new QueryWrapper<User>().eq("username", userDTO.getUsername()));
         //用户不存在或密码不一致

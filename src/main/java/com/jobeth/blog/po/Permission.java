@@ -51,12 +51,12 @@ public class Permission implements Serializable {
     /**
      * 资源路径或路由路径
      */
-    private String url;
+    private String path;
 
     /**
      * 资源对应权限
      */
-    private String permission;
+    private String perm;
 
     /**
      * 组件资源(用于匹配component组件)
@@ -71,7 +71,7 @@ public class Permission implements Serializable {
     /**
      * 备注
      */
-    private String remark;
+    private String title;
 
     /**
      * 排序

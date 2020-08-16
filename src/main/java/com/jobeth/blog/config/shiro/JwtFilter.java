@@ -188,22 +188,22 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 LambdaQueryWrapper<Permission> wrapper = new QueryWrapper<Permission>()
                         .lambda().eq(Permission::getType, 0)
                         .eq(Permission::getStatus, 0)
-                        .groupBy(Permission::getUrl)
+                        .groupBy(Permission::getPath)
                         .orderByDesc(Permission::getSortId);
                 List<Permission> permissionList = permissionService.list(wrapper);
                 for (Permission permission : permissionList) {
-                    if (patternUrl(permission.getUrl(), requestSource)) {
-                        systemSource = permission.getUrl();
-                        systemSourcePerm = permission.getPermission();
+                    if (patternUrl(permission.getPath(), requestSource)) {
+                        systemSource = permission.getPath();
+                        systemSourcePerm = permission.getPerm();
                         break;
                     }
                 }
             }
+            if (systemSourcePerm==null){
+                throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE);
+            }
         } catch (Exception e) {
-            log.error("【 userId:{} 】-匹配资源权限发生内部异常-", jwtToken.getUserId(), e);
-        }
-        if (systemSourcePerm == null) {
-            throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE.getMessage());
+            log.error("【 userId:{} 】-匹配资源权限发生内部异常 】", jwtToken.getUserId(), e);
         }
         log.info("【 系统资源 [{}] 匹配请求资源 [{}] 成功，所需权限 => [{}] 】", systemSource, requestSource, systemSourcePerm);
         return systemSourcePerm;

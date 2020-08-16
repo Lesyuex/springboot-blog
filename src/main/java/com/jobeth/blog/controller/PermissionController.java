@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
+import com.jobeth.blog.common.utils.JacksonUtil;
+import com.jobeth.blog.common.utils.JwtUtil;
 import com.jobeth.blog.common.utils.TreeUtil;
 import com.jobeth.blog.common.properties.BlogProperties;
+import com.jobeth.blog.dto.PermissionDTO;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
-import com.jobeth.blog.vo.MenuVO;
+import com.jobeth.blog.vo.RouteMetaVO;
+import com.jobeth.blog.vo.RouteVO;
 import com.jobeth.blog.vo.JsonResultVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -102,23 +106,34 @@ public class PermissionController extends BaseController {
         }
         IPage<Permission> pageInfo = permissionService.page(page, queryWrapper);
         JsonResultVO<Object> resultVO = new JsonResultVO<>();
-        //查找的是菜单，返回的是树状菜单数据
-        if (permission.getType() == 1) {
-            List<MenuVO> menuVOList = new ArrayList<>();
-            if (!pageInfo.getRecords().isEmpty()) {
-                for (Permission item : pageInfo.getRecords()) {
-                    MenuVO menuVO = new MenuVO();
-                    BeanUtils.copyProperties(item, menuVO);
-                    menuVOList.add(menuVO);
-                }
-            }
-            List<MenuVO> treeVOList = TreeUtil.generateTree(menuVOList, properties.getRootMenuId());
-            resultVO.setData(treeVOList);
-        }
-        //查找的是权限
-        else if (permission.getType() == 0) {
-            resultVO.setData(pageInfo);
-        }
+        resultVO.setData(pageInfo);
         return resultVO;
+    }
+
+
+    @GetMapping("/listCurrentUserRoutes")
+    public JsonResultVO<Object> listCurrentUserRoutes() {
+        String token = httpServletRequest.getHeader(properties.getJwtTokenName());
+        String[] strings = token.split(properties.getJwtTokenPrefix());
+        String userId = JwtUtil.getField(strings[1], "userId", String.class);
+        if (userId == null) {
+            throw new ServerException(ResultEnum.USER_TOKEN_INVALID);
+        }
+        PermissionDTO dto = PermissionDTO.builder().userId(Long.parseLong(userId)).status(0).type(1).build();
+        List<Permission> permissions = permissionService.listByPermissionDTO(dto);
+        List<RouteVO> routeVOList = new ArrayList<>();
+        for (Permission item : permissions) {
+            RouteVO routeVO = new RouteVO();
+            BeanUtils.copyProperties(item, routeVO);
+            routeVO.setHidden(false);
+            RouteMetaVO meta = new RouteMetaVO();
+            meta.setTitle(item.getTitle());
+            meta.setIcon(item.getIcon());
+            meta.setAffix(false);
+            routeVO.setMeta(meta);
+            routeVOList.add(routeVO);
+        }
+        List<RouteVO> treeVOList = TreeUtil.generateTree(routeVOList, properties.getRootMenuId());
+        return new JsonResultVO<>(treeVOList);
     }
 }

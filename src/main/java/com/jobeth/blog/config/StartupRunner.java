@@ -47,7 +47,7 @@ public class StartupRunner implements CommandLineRunner {
         LambdaQueryWrapper<Permission> wrapper = new QueryWrapper<Permission>()
                 .lambda().eq(Permission::getType, 0)
                 .eq(Permission::getStatus, 0)
-                .groupBy(Permission::getUrl)
+                .groupBy(Permission::getPath)
                 .orderByDesc(Permission::getSortId);
         List<Permission> list = permissionService.list(wrapper);
         //保证顺序鉴权
@@ -55,8 +55,8 @@ public class StartupRunner implements CommandLineRunner {
             ///LinkedHashMap<String, String> urlPerm = (LinkedHashMap<String, String>) list.stream().collect(Collectors.toMap(Permission::getUrl, Permission::getPermission));
             LinkedHashMap<String, String> urlPermMap = new LinkedHashMap<>(100);
             list.forEach(permission -> {
-                if (permission.getUrl() != null && permission.getPermission() != null) {
-                    urlPermMap.put(permission.getUrl(), permission.getPermission());
+                if (permission.getPath() != null && permission.getPerm() != null) {
+                    urlPermMap.put(permission.getPath(), permission.getPerm());
                 }
             });
             log.info("【 权限配置加载...... 】");

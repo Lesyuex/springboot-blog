@@ -69,7 +69,7 @@ public class JwtRealm extends AuthorizingRealm {
                 throw new AuthorizationException(ResultEnum.USER_ACCESS_DENIED.getMessage());
             }
             //组装权限数据
-            permissionList = permissions.stream().map(Permission::getPermission).collect(Collectors.toList());
+            permissionList = permissions.stream().map(Permission::getPerm).collect(Collectors.toList());
             redisService.setExpire(userPermRedisKey, permissionList, properties.getJwtExpiration());
         }
         if (permissionList == null || permissionList.isEmpty()) {
