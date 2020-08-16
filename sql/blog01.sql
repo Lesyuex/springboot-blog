@@ -136,6 +136,111 @@ INSERT INTO `t_blog` VALUES (1,1,'Test','ddd','dd',0,0,0,0,'2020-08-10 02:58:20'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_blog_categories`
+--
+
+DROP TABLE IF EXISTS `t_blog_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_blog_categories` (
+  `blog_id` bigint(20) NOT NULL COMMENT '博客Id',
+  `cate_id` int(11) NOT NULL COMMENT '分类Id',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`blog_id`,`cate_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客分类表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_blog_categories`
+--
+
+LOCK TABLES `t_blog_categories` WRITE;
+/*!40000 ALTER TABLE `t_blog_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_blog_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_blog_comments`
+--
+
+DROP TABLE IF EXISTS `t_blog_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_blog_comments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `blog_id` bigint(20) NOT NULL COMMENT '博客id',
+  `user_id` bigint(20) NOT NULL COMMENT '评论人id',
+  `content` varchar(255) NOT NULL COMMENT '内容',
+  `parent_id` varchar(255) NOT NULL COMMENT '父评论id',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(2) NOT NULL COMMENT '状态:0启用 1禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客评论表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_blog_comments`
+--
+
+LOCK TABLES `t_blog_comments` WRITE;
+/*!40000 ALTER TABLE `t_blog_comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_blog_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_blog_metas`
+--
+
+DROP TABLE IF EXISTS `t_blog_metas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_blog_metas` (
+  `blog_id` bigint(20) NOT NULL COMMENT '博客Id',
+  `meta_id` int(11) NOT NULL COMMENT '标签Id',
+  PRIMARY KEY (`blog_id`,`meta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客标签表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_blog_metas`
+--
+
+LOCK TABLES `t_blog_metas` WRITE;
+/*!40000 ALTER TABLE `t_blog_metas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_blog_metas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_category`
+--
+
+DROP TABLE IF EXISTS `t_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL COMMENT '名称',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父分类',
+  `sort` int(11) DEFAULT NULL COMMENT '序号',
+  `remark` varchar(60) DEFAULT NULL COMMENT '备注',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(2) NOT NULL COMMENT '状态:0启用 1禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分类表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_category`
+--
+
+LOCK TABLES `t_category` WRITE;
+/*!40000 ALTER TABLE `t_category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_meta`
 --
 
@@ -175,11 +280,11 @@ CREATE TABLE `t_permission` (
   `parent_id` tinyint(3) DEFAULT '0' COMMENT '父级id',
   `type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unknown' COMMENT '资源类型',
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '权限名',
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资源路径',
-  `permission` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限标识',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资源路径',
+  `perm` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限标识',
   `component` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '组件资源(用于匹配component组件)',
   `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remark` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(2) DEFAULT '0' COMMENT '状态',
@@ -194,7 +299,7 @@ CREATE TABLE `t_permission` (
 
 LOCK TABLES `t_permission` WRITE;
 /*!40000 ALTER TABLE `t_permission` DISABLE KEYS */;
-INSERT INTO `t_permission` VALUES (1,0,'1','用户管理','/userAdd',NULL,'views/user/UserAdd','el-icon-user-solid','用户管理','2019-10-11 12:05:44','2020-08-10 10:22:04',0,0),(2,1,'1','用户查询','/updateUser',NULL,'components/Main','el-icon-search','修改','2019-10-11 12:06:57','2020-08-10 10:21:41',0,1),(3,1,'1','用户添加','/addUser',NULL,'components/Main','el-icon-circle-plus-outline','用户添加','2019-10-11 12:06:25','2020-08-10 10:22:04',0,2),(4,0,'1','角色管理','/role',NULL,'components/Main','el-icon-collection-tag','角色管理','2019-10-11 12:07:25','2020-08-10 10:22:04',0,3),(5,4,'1','角色查询','/listRole',NULL,'views/user/UserList','el-icon-search','修改','2019-10-11 12:08:10','2020-08-10 10:22:04',0,4),(6,4,'1','vip特权','/vip',NULL,'components/Main','el-icon-search','修改','2019-10-11 12:08:10','2020-08-10 10:22:04',0,5),(8,3,'1','添加1','/userAdd1',NULL,'views/user/UserAdd','el-icon-circle-plus-outline','用户添加','2019-10-11 12:06:25','2020-08-10 10:22:04',0,6),(9,3,'1','添加2','/userAdd2',NULL,'views/user/UserAdd','el-icon-circle-plus-outline','用户添加','2019-10-11 12:06:25','2020-08-10 10:22:04',0,7),(10,2,'1','查询1','/userTest',NULL,'views/user/UserList','el-icon-search','修改','2019-10-11 12:06:57','2020-08-10 10:22:04',0,8),(11,0,'0','系统所有权限','/**/*','sys:all','',NULL,'','2020-08-10 10:15:37','2020-08-10 10:22:04',0,9);
+INSERT INTO `t_permission` VALUES (1,0,'1','用户管理','/userAdd',NULL,'Layout','icon','用户管理','2019-10-11 12:05:44','2020-08-16 03:11:44',0,0),(2,1,'1','用户查询','/updateUser',NULL,'permission/role','icon','修改','2019-10-11 12:06:57','2020-08-16 03:11:44',0,1),(3,1,'1','用户添加','/addUser',NULL,'permission/components/SwitchRoles','icon','用户添加','2019-10-11 12:06:25','2020-08-16 03:11:44',0,2),(4,0,'1','权限管理','/permission',NULL,'Layout','icon','权限管理','2019-10-11 12:07:25','2020-08-16 15:48:42',0,3),(5,4,'1','权限查询','/list',NULL,'permission/List','icon','权限查询','2019-10-11 12:08:10','2020-08-16 15:48:42',0,4),(11,0,'0','系统所有权限','/**/**','sys:all','',NULL,'','2020-08-10 10:15:37','2020-08-16 01:16:50',0,9);
 /*!40000 ALTER TABLE `t_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -280,6 +385,75 @@ INSERT INTO `t_user` VALUES (1,'admin','123456','2019-10-11 11:05:03','2020-08-1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_user_collect_blog`
+--
+
+DROP TABLE IF EXISTS `t_user_collect_blog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_user_collect_blog` (
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `blog_id` bigint(20) NOT NULL COMMENT '博客id',
+  PRIMARY KEY (`user_id`,`blog_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收藏的博客';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user_collect_blog`
+--
+
+LOCK TABLES `t_user_collect_blog` WRITE;
+/*!40000 ALTER TABLE `t_user_collect_blog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_user_collect_blog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_user_collect_categories`
+--
+
+DROP TABLE IF EXISTS `t_user_collect_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_user_collect_categories` (
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `cate_id` int(11) NOT NULL COMMENT '分类id',
+  PRIMARY KEY (`user_id`,`cate_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收藏的分类';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user_collect_categories`
+--
+
+LOCK TABLES `t_user_collect_categories` WRITE;
+/*!40000 ALTER TABLE `t_user_collect_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_user_collect_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_user_collect_metas`
+--
+
+DROP TABLE IF EXISTS `t_user_collect_metas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_user_collect_metas` (
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `meta_id` int(11) NOT NULL COMMENT '标签id',
+  PRIMARY KEY (`user_id`,`meta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收藏的分类';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user_collect_metas`
+--
+
+LOCK TABLES `t_user_collect_metas` WRITE;
+/*!40000 ALTER TABLE `t_user_collect_metas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_user_collect_metas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_users_roles`
 --
 
@@ -312,4 +486,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-14 15:53:58
+-- Dump completed on 2020-08-16 22:13:57
