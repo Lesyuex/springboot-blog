@@ -51,6 +51,8 @@ public class User implements Serializable {
      */
     private Boolean enable;
 
+
+    private Integer status;
     /**
      * 创建时间
      */

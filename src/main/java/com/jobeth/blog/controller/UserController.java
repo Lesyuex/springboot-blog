@@ -75,7 +75,6 @@ public class UserController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody User user) {
-        System.out.println(JacksonUtil.objectToJson(user));
         LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()
                 .eq(User::getId, user.getId());
         return userService.update(user, update) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
