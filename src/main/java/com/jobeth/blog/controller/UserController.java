@@ -1,14 +1,23 @@
 package com.jobeth.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 
 import com.jobeth.blog.po.User;
 import com.jobeth.blog.service.UserService;
 import com.jobeth.blog.vo.JsonResultVO;
+import com.jobeth.blog.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -40,7 +49,7 @@ public class UserController extends BaseController {
         User user = userService.getById(id);
         if (user == null) {
             String exceptionMsg = "【 用户ID => " + id + " 不存在 】";
-            return new JsonResultVO<>(ResultEnum.REQUEST_PARAMETER_ERROR,exceptionMsg);
+            return new JsonResultVO<>(ResultEnum.REQUEST_PARAMETER_ERROR, exceptionMsg);
         }
         return new JsonResultVO<>(user);
     }
@@ -78,5 +87,22 @@ public class UserController extends BaseController {
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Integer id) {
         return userService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+    }
+
+    @GetMapping("/list")
+    public JsonResultVO<Object> list(Page<User> page, User user) {
+        LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda();
+        IPage<User> pageInfo = userService.page(page, queryWrapper);
+        Page<UserVO> userVoPage = new Page<>();
+        BeanUtils.copyProperties(pageInfo, userVoPage);
+        List<UserVO> userVOList = new ArrayList<>();
+        List<User> userList = pageInfo.getRecords();
+        for (User item : userList) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(item, userVO);
+            userVOList.add(userVO);
+        }
+        userVoPage.setRecords(userVOList);
+        return new JsonResultVO<>(userVoPage);
     }
 }
