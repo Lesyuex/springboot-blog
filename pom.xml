@@ -82,12 +82,18 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-   <!--     &lt;!&ndash; 支持java8 localDate等新时间类型的序列化 &ndash;&gt;
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>-->
+        </dependency>
         <!--测试依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

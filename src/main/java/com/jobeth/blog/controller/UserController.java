@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 
+import com.jobeth.blog.common.utils.JacksonUtil;
+import com.jobeth.blog.common.utils.StringUtils;
 import com.jobeth.blog.po.User;
 import com.jobeth.blog.service.UserService;
 import com.jobeth.blog.vo.JsonResultVO;
@@ -73,6 +75,7 @@ public class UserController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody User user) {
+        System.out.println(JacksonUtil.objectToJson(user));
         LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()
                 .eq(User::getId, user.getId());
         return userService.update(user, update) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
@@ -85,13 +88,16 @@ public class UserController extends BaseController {
      * @return 删除结果
      */
     @DeleteMapping("/delete/{id}")
-    public JsonResultVO<Object> delete(@PathVariable Integer id) {
+    public JsonResultVO<Object> delete(@PathVariable Long id) {
         return userService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
     }
 
     @GetMapping("/list")
     public JsonResultVO<Object> list(Page<User> page, User user) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda();
+        if (StringUtils.notNullAndEmpty(user.getUsername())) {
+            queryWrapper.like(User::getUsername, user.getUsername());
+        }
         IPage<User> pageInfo = userService.page(page, queryWrapper);
         Page<UserVO> userVoPage = new Page<>();
         BeanUtils.copyProperties(pageInfo, userVoPage);
