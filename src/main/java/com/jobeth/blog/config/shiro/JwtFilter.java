@@ -199,7 +199,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                     }
                 }
             }
-            if (systemSourcePerm==null){
+            if (systemSourcePerm == null) {
                 throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE);
             }
         } catch (Exception e) {
