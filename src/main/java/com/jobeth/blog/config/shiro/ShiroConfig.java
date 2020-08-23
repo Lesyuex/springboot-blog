@@ -41,18 +41,18 @@ public class ShiroConfig {
      * @return JwtRealm
      */
     @Bean
-    public JwtRealm jwtRealm() {
-        JwtRealm jwtRealm = new JwtRealm();
+    public CustomRealm jwtRealm() {
+        CustomRealm customRealm = new CustomRealm();
         //基于权限授权
-        jwtRealm.setPermissionResolver(new JwtPermissionResolver());
-        return jwtRealm;
+        customRealm.setPermissionResolver(new JwtPermissionResolver());
+        return customRealm;
     }
 
 
     @Bean("shiroManager")
-    public DefaultSecurityManager defaultWebSecurityManager(@Qualifier("jwtRealm") JwtRealm jwtRealm) {
+    public DefaultSecurityManager defaultWebSecurityManager(@Qualifier("jwtRealm") CustomRealm customRealm) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
-        defaultWebSecurityManager.setRealm(jwtRealm);
+        defaultWebSecurityManager.setRealm(customRealm);
         return defaultWebSecurityManager;
     }
 

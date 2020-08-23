@@ -6,7 +6,7 @@ import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.util.PatternMatcher;
 
 /**
- * Desc
+ * Shiro 权限对比校验
  *
  * @author Jobeth
  * @since 2020/7/29 17:59

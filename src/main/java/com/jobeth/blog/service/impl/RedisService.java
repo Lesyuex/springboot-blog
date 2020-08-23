@@ -46,9 +46,9 @@ public class RedisService {
             operations = redisTemplate.opsForValue();
             operations.set(key, val);
             success = true;
-            log.info("【 key => {} 数据存入Redis缓存成功 】", key);
+            log.info("【 key => {} 数据存入 Redis 缓存成功 】", key);
         } catch (Exception e) {
-            log.error("【 key => {} 数据存入redis缓存发生错误 -】", key, e);
+            log.error("【 key => {} 数据存入 Redis 缓存发生错误 -】", key, e);
         }
         return success;
 
@@ -67,9 +67,9 @@ public class RedisService {
             operations.set(key, value);
             redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
             Date date = new Date(Clock.systemDefaultZone().millis() + expireTime);
-            log.info("【 key => {} 数据存入redis缓存成功,失效时间：{} 】", key,  DateUtil.dateString(date));
+            log.info("【 key => {} 数据存入 Redis 缓存成功,失效时间：{} 】", key,  DateUtil.dateString(date));
         } catch (Exception e) {
-            log.error("【 key => {} 数据存入redis缓存发生错误 -】", key, e);
+            log.error("【 key => {} 数据存入 Redis 缓存发生错误 -】", key, e);
             throw e;
         }
     }
@@ -131,7 +131,7 @@ public class RedisService {
             keys = redisTemplate.keys(prefix);
             if (CollectionUtils.isNotEmpty(keys)) {
                 redisTemplate.delete(keys);
-                log.info("【 清除Redis keys 数据成功 => {} 】", keys);
+                log.info("【 清除 Redis  keys 数据成功 => {} 】", keys);
             }
         } catch (Exception e) {
             log.error("【 从 Redis 删除 keys => {} 缓存发生错误 】", keys, e);
@@ -142,7 +142,6 @@ public class RedisService {
     public <T> T get(String key, Class<T> clazz) {
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         String json = operations.get(key);
-        T t = JacksonUtil.jsonToPojo(json, clazz);
-        return t;
+        return JacksonUtil.jsonToPojo(json, clazz);
     }
 }

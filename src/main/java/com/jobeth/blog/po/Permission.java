@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_permission")
+@TableName("t_menu_permission")
 public class Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,10 @@ public class Permission implements Serializable {
      * 资源类型:0:请求资源，1：菜单
      */
     private Integer type;
-
+    /**
+     * 重定向路径
+     */
+    private String redirect;
     /**
      * 资源路径或路由路径
      */

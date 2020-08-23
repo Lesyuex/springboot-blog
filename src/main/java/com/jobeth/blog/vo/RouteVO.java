@@ -1,6 +1,7 @@
 package com.jobeth.blog.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @ToString
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RouteVO implements TreeVO<RouteVO> {
     /**
      * 权限id
@@ -25,6 +27,11 @@ public class RouteVO implements TreeVO<RouteVO> {
      * 路由名字
      */
     private String name;
+
+    /**
+     * 重定向路径
+     */
+    private String redirect;
 
     /**
      * 资源路径

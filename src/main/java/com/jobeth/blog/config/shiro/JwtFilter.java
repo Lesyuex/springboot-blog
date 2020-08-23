@@ -99,7 +99,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         //从header中获取token
         String token = httpServletRequest.getHeader(properties.getJwtTokenName());
-        return new JwtToken(token);
+        return new CustomToken(token);
     }
 
     @Override
@@ -111,23 +111,23 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         //生成Token认证的信息
-        JwtToken jwtToken = (JwtToken) createToken(request, response);
+        CustomToken customToken = (CustomToken) createToken(request, response);
         Subject subject = getSubject(request, response);
         try {
-            subject.login(jwtToken);
-            log.info("【 userId:{} - 凭证正确，认证成功 】", jwtToken.getUserId());
-            if (JwtUtil.needRefresh(jwtToken.getRealToken())) {
+            subject.login(customToken);
+            log.info("【 userId:{} - 凭证正确，认证成功 】", customToken.getUserId());
+            if (JwtUtil.needRefresh(customToken.getRealToken())) {
                 //生成新token
-                String userId = jwtToken.getUserId().toString();
+                String userId = customToken.getUserId().toString();
                 String newToken = properties.getJwtTokenPrefix() + JwtUtil.generateToken(userId);
                 //存进redis
                 String redisKey = properties.getJwtTokenPrefix() + userId;
                 redisService.setExpire(redisKey, newToken, properties.getJwtExpiration());
                 log.info("【 userId:{}- 凭证刷新，更新完成 】", userId);
             }
-            return onLoginSuccess(jwtToken, subject, request, response);
+            return onLoginSuccess(customToken, subject, request, response);
         } catch (AuthenticationException e) {
-            return onLoginFailure(jwtToken, e, request, response);
+            return onLoginFailure(customToken, e, request, response);
         }
     }
 
@@ -135,11 +135,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean onLoginSuccess(AuthenticationToken authenticationToken, Subject subject, ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        JwtToken jwtToken = (JwtToken) authenticationToken;
+        CustomToken customToken = (CustomToken) authenticationToken;
         String requestSource = httpServletRequest.getRequestURI();
-        String userId = jwtToken.getUserId().toString();
+        String userId = customToken.getUserId().toString();
         try {
-            String systemSourcePerm = getSystemSourcePerm(jwtToken, requestSource);
+            String systemSourcePerm = getSystemSourcePerm(customToken, requestSource);
             //鉴权
             subject.checkPermission(systemSourcePerm);
             log.info("【 userId:{} - 拥有 [ {} ] 访问权限,授权成功 】", userId, requestSource);
@@ -153,8 +153,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-        JwtToken jwtToken = (JwtToken) token;
-        log.error("【 userId:{} 】- 凭证有误，认证失败- [{}]", jwtToken.getUserId(), e.getMessage());
+        CustomToken customToken = (CustomToken) token;
+        log.error("【 userId:{} 】- 凭证有误，认证失败- [{}]", customToken.getUserId(), e.getMessage());
         ResponseUtil.writeJson(response, ResultEnum.USER_TOKEN_INVALID);
         return false;
     }
@@ -169,7 +169,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected String getSystemSourcePerm(AuthenticationToken token, String requestSource) {
         String systemSource = null;
         String systemSourcePerm = null;
-        JwtToken jwtToken = (JwtToken) token;
+        CustomToken customToken = (CustomToken) token;
         try {
             //从redis取url对应的匹配权限
             if (redisService.exists(properties.getRedisUrlPermKey())) {
@@ -203,7 +203,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 throw new ServerException(ResultEnum.SERVER_NO_THIS_SOURCE);
             }
         } catch (Exception e) {
-            log.error("【 userId:{} 】-匹配资源权限发生内部异常 】", jwtToken.getUserId(), e);
+            log.error("【 userId:{} 】-匹配资源权限发生内部异常 】", customToken.getUserId(), e);
         }
         log.info("【 系统资源 [{}] 匹配请求资源 [{}] 成功，所需权限 => [{}] 】", systemSource, requestSource, systemSourcePerm);
         return systemSourcePerm;

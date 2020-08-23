@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Desc
+ * 自定义认证鉴权Realm
  *
  * @author Jobeth
  * @since 2020/6/30 15:16
  */
 @Slf4j
-public class JwtRealm extends AuthorizingRealm {
+public class CustomRealm extends AuthorizingRealm {
 
     @Autowired
     private RedisService redisService;
@@ -37,14 +37,49 @@ public class JwtRealm extends AuthorizingRealm {
     private BlogProperties properties;
 
     /**
-     * 是否支持JwtToken认证
+     * 是否支持CustomToken认证
      *
      * @param token token
      * @return boolean
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof JwtToken;
+        return token instanceof CustomToken;
+    }
+
+    /**
+     * 认证
+     *
+     * @param authenticationToken 登录信息
+     * @return AuthenticationInfo
+     */
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
+        CustomToken customToken = (CustomToken) authenticationToken;
+        String token = (String) customToken.getCredentials();
+        String[] strings = token.split(properties.getJwtTokenPrefix());
+        if (strings.length != 2) {
+            throw new AuthenticationException("用户Token无效");
+        }
+        customToken.setRealToken(strings[1]);
+        String userId = JwtUtil.getField(customToken.getRealToken(), "userId", String.class);
+        if (userId == null) {
+            throw new AuthenticationException("用户Token过期");
+        }
+        customToken.setUserId(Long.parseLong(userId));
+        //从redis中找
+        String redisKey = properties.getJwtTokenPrefix() + userId;
+        //token无效或者过期
+        if (!redisService.exists(redisKey)) {
+            throw new AuthenticationException("用户Redis Token 失效");
+        }
+        String redisToken = (String) redisService.get(redisKey);
+        //token无效或者过期
+        if (!token.equals(redisToken)) {
+            throw new AuthenticationException("用户Token与Redis Token不一致");
+        }
+        //返回登录凭证 用于鉴权
+        return new SimpleAuthenticationInfo(userId, token, this.getName());
     }
 
     /**
@@ -80,38 +115,5 @@ public class JwtRealm extends AuthorizingRealm {
         return authorizationInfo;
     }
 
-    /**
-     * 认证
-     *
-     * @param authenticationToken 登录信息
-     * @return AuthenticationInfo
-     */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
-        JwtToken jwtToken = (JwtToken) authenticationToken;
-        String token = (String) jwtToken.getCredentials();
-        String[] strings = token.split(properties.getJwtTokenPrefix());
-        if (strings.length != 2) {
-            throw new AuthenticationException("用户Token无效");
-        }
-        jwtToken.setRealToken(strings[1]);
-        String userId = JwtUtil.getField(jwtToken.getRealToken(), "userId", String.class);
-        if (userId == null) {
-            throw new AuthenticationException("用户Token过期");
-        }
-        jwtToken.setUserId(Long.parseLong(userId));
-        //从redis中找
-        String redisKey = properties.getJwtTokenPrefix() + userId;
-        //token无效或者过期
-        if (!redisService.exists(redisKey)) {
-            throw new AuthenticationException("用户Redis Token 失效");
-        }
-        String redisToken = (String) redisService.get(redisKey);
-        //token无效或者过期
-        if (!token.equals(redisToken)) {
-            throw new AuthenticationException("用户Token与Redis Token不一致");
-        }
-        //返回登录凭证 用于鉴权
-        return new SimpleAuthenticationInfo(userId, token, this.getName());
-    }
+
 }

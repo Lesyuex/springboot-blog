@@ -10,12 +10,12 @@ import org.apache.shiro.authc.AuthenticationToken;
  * @since 2020/6/30 15:20
  */
 @Data
-public class JwtToken implements AuthenticationToken {
+public class CustomToken implements AuthenticationToken {
     private Long userId;
     private String token;
     private String realToken;
 
-    public JwtToken(String token) {
+    public CustomToken(String token) {
         this.token = token;
     }
 

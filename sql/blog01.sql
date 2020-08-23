@@ -272,7 +272,7 @@ UNLOCK TABLES;
 -- Table structure for table `t_permission`
 --
 
-DROP TABLE IF EXISTS `t_permission`;
+DROP TABLE IF EXISTS t_menu_permission;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_permission` (
@@ -297,10 +297,10 @@ CREATE TABLE `t_permission` (
 -- Dumping data for table `t_permission`
 --
 
-LOCK TABLES `t_permission` WRITE;
-/*!40000 ALTER TABLE `t_permission` DISABLE KEYS */;
-INSERT INTO `t_permission` VALUES (1,0,'1','用户管理','/userAdd',NULL,'Layout','icon','用户管理','2019-10-11 12:05:44','2020-08-16 03:11:44',0,0),(2,1,'1','用户查询','/updateUser',NULL,'permission/role','icon','修改','2019-10-11 12:06:57','2020-08-16 03:11:44',0,1),(3,1,'1','用户添加','/addUser',NULL,'permission/components/SwitchRoles','icon','用户添加','2019-10-11 12:06:25','2020-08-16 03:11:44',0,2),(4,0,'1','权限管理','/permission',NULL,'Layout','icon','权限管理','2019-10-11 12:07:25','2020-08-16 15:48:42',0,3),(5,4,'1','权限查询','/list',NULL,'permission/List','icon','权限查询','2019-10-11 12:08:10','2020-08-16 15:48:42',0,4),(11,0,'0','系统所有权限','/**/**','sys:all','',NULL,'','2020-08-10 10:15:37','2020-08-16 01:16:50',0,9);
-/*!40000 ALTER TABLE `t_permission` ENABLE KEYS */;
+LOCK TABLES t_menu_permission WRITE;
+/*!40000 ALTER TABLE t_menu_permission DISABLE KEYS */;
+INSERT INTO t_menu_permission VALUES (1,0,'1','用户管理','/userAdd',NULL,'Layout','icon','用户管理','2019-10-11 12:05:44','2020-08-16 03:11:44',0,0),(2,1,'1','用户查询','/updateUser',NULL,'permission/role','icon','修改','2019-10-11 12:06:57','2020-08-16 03:11:44',0,1),(3,1,'1','用户添加','/addUser',NULL,'permission/components/SwitchRoles','icon','用户添加','2019-10-11 12:06:25','2020-08-16 03:11:44',0,2),(4,0,'1','权限管理','/permission',NULL,'Layout','icon','权限管理','2019-10-11 12:07:25','2020-08-16 15:48:42',0,3),(5,4,'1','权限查询','/list',NULL,'permission/List','icon','权限查询','2019-10-11 12:08:10','2020-08-16 15:48:42',0,4),(11,0,'0','系统所有权限','/**/**','sys:all','',NULL,'','2020-08-10 10:15:37','2020-08-16 01:16:50',0,9);
+/*!40000 ALTER TABLE t_menu_permission ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -335,7 +335,7 @@ UNLOCK TABLES;
 -- Table structure for table `t_roles_permissions`
 --
 
-DROP TABLE IF EXISTS `t_roles_permissions`;
+DROP TABLE IF EXISTS t_roles_menus_permissions;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_roles_permissions` (
@@ -349,10 +349,10 @@ CREATE TABLE `t_roles_permissions` (
 -- Dumping data for table `t_roles_permissions`
 --
 
-LOCK TABLES `t_roles_permissions` WRITE;
-/*!40000 ALTER TABLE `t_roles_permissions` DISABLE KEYS */;
-INSERT INTO `t_roles_permissions` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,7),(1,8),(1,9),(1,10),(1,11);
-/*!40000 ALTER TABLE `t_roles_permissions` ENABLE KEYS */;
+LOCK TABLES t_roles_menus_permissions WRITE;
+/*!40000 ALTER TABLE t_roles_menus_permissions DISABLE KEYS */;
+INSERT INTO t_roles_menus_permissions VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,7),(1,8),(1,9),(1,10),(1,11);
+/*!40000 ALTER TABLE t_roles_menus_permissions ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

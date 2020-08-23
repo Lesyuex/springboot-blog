@@ -7,13 +7,14 @@
         p.id,
         p.parent_id,
         p.name,
+        p.redirect,
         p.path,
         p.perm,
         p.title,
         p.component,
         p.icon
-        from t_permission p
-        LEFT JOIN t_roles_permissions rp ON p.id = rp.perm_id
+        from t_menu_permission p
+        LEFT JOIN t_roles_menus_permissions rp ON p.id = rp.perm_id
         LEFT JOIN t_users_roles ur ON rp.role_id = ur.role_id
         <where>
             <if test="userId !=null and userId !=''">
@@ -29,7 +30,6 @@
                 and p.status = #{status,jdbcType=TINYINT}
             </if>
         </where>
-        GROUP BY p.path
         order by p.sort_id
     </select>
 </mapper>
