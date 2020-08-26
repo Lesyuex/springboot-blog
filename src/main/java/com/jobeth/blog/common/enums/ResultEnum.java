@@ -38,7 +38,7 @@ public enum ResultEnum {
     /**
      * Token过期或者无效
      */
-    USER_TOKEN_INVALID(502, "用户Token过期或无效！"),
+    USER_TOKEN_INVALID(502, "用户登录无效或已过期！"),
     /**
      * 没有权限
      */

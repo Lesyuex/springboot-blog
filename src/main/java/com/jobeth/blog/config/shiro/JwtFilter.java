@@ -187,7 +187,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             if (systemSourcePerm == null) {
                 LambdaQueryWrapper<Permission> wrapper = new QueryWrapper<Permission>()
                         .lambda().eq(Permission::getType, 0)
-                        .eq(Permission::getStatus, 0)
+                        .eq(Permission::getStatus, 1)
                         .groupBy(Permission::getPath)
                         .orderByDesc(Permission::getSortId);
                 List<Permission> permissionList = permissionService.list(wrapper);

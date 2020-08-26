@@ -119,7 +119,7 @@ public class PermissionController extends BaseController {
         if (userId == null) {
             throw new ServerException(ResultEnum.USER_TOKEN_INVALID);
         }
-        PermissionDTO dto = PermissionDTO.builder().userId(Long.parseLong(userId)).status(0).type(1).build();
+        PermissionDTO dto = PermissionDTO.builder().userId(Long.parseLong(userId)).status(1).type(1).build();
         List<Permission> permissions = permissionService.listByPermissionDTO(dto);
         List<RouteVO> routeVOList = new ArrayList<>();
         for (Permission item : permissions) {
