@@ -8,9 +8,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 
-import com.jobeth.blog.common.utils.JacksonUtil;
 import com.jobeth.blog.common.utils.StringUtils;
+import com.jobeth.blog.dto.UserDTO;
+import com.jobeth.blog.po.Role;
 import com.jobeth.blog.po.User;
+import com.jobeth.blog.service.RoleService;
 import com.jobeth.blog.service.UserService;
 import com.jobeth.blog.vo.JsonResultVO;
 import com.jobeth.blog.vo.UserVO;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +37,11 @@ import java.util.List;
 @Slf4j
 public class UserController extends BaseController {
     private final UserService userService;
+    private final RoleService roleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
 
@@ -64,20 +69,23 @@ public class UserController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody User user) {
-        return userService.save(user) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return userService.save(user) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
      * 更新
      *
-     * @param user user
+     * @param userDTO userDTO
      * @return 结果
      */
     @PutMapping("/update")
-    public JsonResultVO<Object> update(@RequestBody User user) {
-        LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()
-                .eq(User::getId, user.getId());
-        return userService.update(user, update) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+    public JsonResultVO<Object> update(@RequestBody UserDTO userDTO) {
+        try {
+            userService.updateUserAndUserRole(userDTO);
+            return new JsonResultVO<>();
+        } catch (Exception e) {
+            return new JsonResultVO<>(ResultEnum.FAIL.getCode(),"更新失败");
+        }
     }
 
     /**
@@ -88,14 +96,17 @@ public class UserController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Long id) {
-        return userService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return userService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
-    @GetMapping("/list")
-    public JsonResultVO<Object> list(Page<User> page, User user) {
+    @GetMapping("/listByPage")
+    public JsonResultVO<Object> listByPage(Page<User> page, User user) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda();
         if (StringUtils.notNullAndEmpty(user.getUsername())) {
             queryWrapper.like(User::getUsername, user.getUsername());
+        }
+        if (StringUtils.notNullAndEmpty(user.getEnabled())) {
+            queryWrapper.eq(User::getEnabled, user.getEnabled());
         }
         IPage<User> pageInfo = userService.page(page, queryWrapper);
         Page<UserVO> userVoPage = new Page<>();

@@ -49,7 +49,7 @@ public class User implements Serializable {
     /**
      * 状态:1启用 0禁用
      */
-    private Boolean enable;
+    private Boolean enabled;
 
 
     private Integer status;

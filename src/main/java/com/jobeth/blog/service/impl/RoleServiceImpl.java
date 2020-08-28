@@ -1,5 +1,6 @@
 package com.jobeth.blog.service.impl;
 
+import com.jobeth.blog.dto.RoleDTO;
 import com.jobeth.blog.po.Role;
 import com.jobeth.blog.mapper.RoleMapper;
 import com.jobeth.blog.service.RoleService;
@@ -20,7 +21,7 @@ import java.util.List;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
     @Override
-    public List<Role> listByUserId(Long userId) {
-        return null;
+    public List<Role> listAll(RoleDTO roleDTO) {
+        return baseMapper.listAll(roleDTO);
     }
 }

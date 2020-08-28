@@ -1,5 +1,6 @@
 package com.jobeth.blog.service;
 
+import com.jobeth.blog.dto.RoleDTO;
 import com.jobeth.blog.po.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,5 +16,10 @@ import java.util.List;
  */
 public interface RoleService extends IService<Role> {
 
-    List<Role> listByUserId(Long userId);
+    /**
+     * listAll
+     * @param roleDTO roleDTO
+     * @return  List<Role>
+     */
+    List<Role> listAll(RoleDTO roleDTO);
 }

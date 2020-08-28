@@ -98,7 +98,7 @@ public class CustomRealm extends AuthorizingRealm {
             permissionList = (List<String>) redisService.get(userPermRedisKey);
         } else {
             //从数据库读取资源
-            PermissionDTO permissionDTO = PermissionDTO.builder().type(0).status(0).userId(userId).build();
+            PermissionDTO permissionDTO = PermissionDTO.builder().type(0).status(1).userId(userId).build();
             List<Permission> permissions = permissionService.listByPermissionDTO(permissionDTO);
             if (permissions == null || permissions.isEmpty()) {
                 throw new AuthorizationException(ResultEnum.USER_ACCESS_DENIED.getMessage());

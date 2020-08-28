@@ -66,7 +66,7 @@ public class PermissionController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Permission permission) {
-        return permissionService.save(permission) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return permissionService.save(permission) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -77,7 +77,7 @@ public class PermissionController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Permission permission) {
-        return permissionService.updateById(permission) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return permissionService.updateById(permission) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -88,7 +88,7 @@ public class PermissionController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Integer id) {
-        return permissionService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return permissionService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -98,7 +98,7 @@ public class PermissionController extends BaseController {
      * @param permission permission
      * @return 列表数据
      */
-    @GetMapping("/list")
+    @GetMapping("/listByPage")
     public JsonResultVO<Object> listByPage(Page<Permission> page, Permission permission) {
         LambdaQueryWrapper<Permission> queryWrapper = new QueryWrapper<Permission>().lambda();
         if (permission.getType() != null) {

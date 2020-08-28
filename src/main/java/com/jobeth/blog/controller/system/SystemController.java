@@ -66,6 +66,6 @@ public class SystemController extends BaseController {
 
     @PostMapping("/test/get/{id}")
     public JsonResultVO<Integer> test(@PathVariable Integer id) {
-        return new JsonResultVO<>(ResultEnum.NO_ERROR, id);
+        return new JsonResultVO<>(ResultEnum.SUCCESS, id);
     }
 }

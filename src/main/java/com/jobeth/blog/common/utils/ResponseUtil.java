@@ -60,7 +60,7 @@ public class ResponseUtil {
      * @return 操作正常结果
      */
     public static <T> JsonResultVO<T> success() {
-        return buildResult(ResultEnum.NO_ERROR);
+        return buildResult(ResultEnum.SUCCESS);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ResponseUtil {
     public static <T> JsonResultVO<T> buildResult(ResultEnum resultEnum, T data) {
         JsonResultVO<T> jsonResultVO = new JsonResultVO<>();
         jsonResultVO.setCode(resultEnum.getCode());
-        jsonResultVO.setMsg(resultEnum.getMessage());
+        jsonResultVO.setMessage(resultEnum.getMessage());
         jsonResultVO.setData(data);
         return jsonResultVO;
     }
@@ -82,7 +82,7 @@ public class ResponseUtil {
      * @return 操作失败结果
      */
     public static <T> JsonResultVO<T> fail() {
-        return fail(ResultEnum.ERROR);
+        return fail(ResultEnum.FAIL);
     }
 
     /**

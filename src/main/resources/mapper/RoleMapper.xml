@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jobeth.blog.mapper.RoleMapper">
+    <insert id="insertUserRole">
+    </insert>
+    <delete id="deleteRoleByUserId" parameterType="long">
+        delete
+        from t_users_roles
+        where user_id = #{userId}
+    </delete>
 
+
+    <select id="listAll" resultType="com.jobeth.blog.po.Role" parameterType="com.jobeth.blog.dto.RoleDTO">
+        select t.id, t.name, t.remark, t.create_time, t.update_time, t.enabled, t.status
+        from t_role t
+        <if test="userId !=null and userId!=''">
+            left join t_users_roles ur on t.user_id = ur.user_id
+        </if>
+    </select>
 </mapper>

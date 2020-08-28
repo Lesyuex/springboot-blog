@@ -1,5 +1,7 @@
 package com.jobeth.blog.dto;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,4 +30,16 @@ public class UserDTO implements Serializable {
      * 邮箱
      */
     private String email;
+
+    /**
+     * 状态:1启用 0禁用
+     */
+    private Boolean enabled;
+
+
+    private Integer status;
+
+    private Long[] rolesList;
+
+
 }

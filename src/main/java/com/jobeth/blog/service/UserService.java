@@ -1,5 +1,6 @@
 package com.jobeth.blog.service;
 
+import com.jobeth.blog.dto.UserDTO;
 import com.jobeth.blog.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +21,9 @@ public interface UserService extends IService<User> {
      */
     User findByUsername(String username);
 
+    /**
+     * 更新用户和用户角色
+     * @param userDTO userDTO
+     */
+    void updateUserAndUserRole(UserDTO userDTO) ;
 }

@@ -51,4 +51,4 @@ server:
 # 打印sql
 logging:
   level:
-    com.jobeth.perm.mapper: debug
+    com.jobeth.blog.mapper: debug

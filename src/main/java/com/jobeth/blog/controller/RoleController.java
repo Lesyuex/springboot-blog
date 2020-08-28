@@ -1,14 +1,26 @@
 package com.jobeth.blog.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
+import com.jobeth.blog.common.utils.JacksonUtil;
+import com.jobeth.blog.common.utils.StringUtils;
+import com.jobeth.blog.dto.RoleDTO;
 import com.jobeth.blog.po.Role;
 import com.jobeth.blog.service.RoleService;
 import com.jobeth.blog.vo.JsonResultVO;
+import com.jobeth.blog.vo.RoleVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * <p>
@@ -20,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/role")
+@Slf4j
 public class RoleController {
 
     private final RoleService roleService;
@@ -52,7 +65,7 @@ public class RoleController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Role role) {
-        return roleService.save(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return roleService.save(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -63,7 +76,7 @@ public class RoleController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Role role) {
-        return roleService.updateById(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return roleService.updateById(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -74,17 +87,38 @@ public class RoleController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Integer id) {
-        return roleService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return roleService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
      * 列表查询分页查询
      *
-     * @param role role
+     * @param roleDTO roleDTO
      * @return 列表数据
      */
-    @GetMapping("/list")
-    public JsonResultVO<List<Role>> list(@RequestBody Role role) {
+    @GetMapping("/listByPage")
+    public JsonResultVO<Object> listByPage(Page<Role> page, RoleDTO roleDTO) {
+        LambdaQueryWrapper<Role> lambda = new QueryWrapper<Role>().lambda();
+        IPage<Role> rolePage = roleService.page(page, lambda);
+        IPage<RoleVO> roleVoPage = new Page<>();
+        BeanUtils.copyProperties(rolePage, roleVoPage);
+        List<RoleVO> roleVOList = new ArrayList<>();
+        List<Role> roleList = rolePage.getRecords();
+        for (Role role1 : roleList) {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(role1, roleVO);
+            roleVO.setLabel(role1.getName());
+            roleVO.setValue(StringUtils.getValue(role1.getId(), null));
+            roleVOList.add(roleVO);
+        }
+        roleVoPage.setRecords(roleVOList);
+        log.info(JacksonUtil.objectToJson(roleVoPage));
+        return new JsonResultVO<>(roleVoPage);
+    }
+
+    @GetMapping("/listAll")
+    public JsonResultVO<Object> list(RoleDTO roleDTO) {
+
         return new JsonResultVO<>();
     }
 }

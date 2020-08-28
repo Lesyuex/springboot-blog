@@ -55,7 +55,7 @@ public class ArticleCommentController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody ArticleComment articleComment) {
-        return articleCommentService.save(articleComment) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleCommentService.save(articleComment) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ArticleCommentController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody ArticleComment articleComment) {
-        return articleCommentService.updateById(articleComment) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleCommentService.updateById(articleComment) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ArticleCommentController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<ArticleComment> delete(@PathVariable Integer id) {
-        return articleCommentService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleCommentService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -86,8 +86,8 @@ public class ArticleCommentController {
      * @param articleComment articleComment
      * @return 列表数据
      */
-    @GetMapping("/list")
-    public JsonResultVO<Object> list(Page<ArticleComment> page, ArticleComment articleComment) {
+    @GetMapping("/listByPage")
+    public JsonResultVO<Object> listByPage(Page<ArticleComment> page, ArticleComment articleComment) {
         LambdaQueryWrapper<ArticleComment> queryWrapper = new QueryWrapper<ArticleComment>().lambda();
         if (StringUtils.notNullAndEmpty(articleComment.getArticleId().toString())) {
             queryWrapper.eq(ArticleComment::getArticleId, articleComment.getArticleId());

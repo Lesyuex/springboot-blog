@@ -2,6 +2,7 @@ package com.jobeth.blog.mapper;
 
 import com.jobeth.blog.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Jobeth
  * @since 2020-06-30
  */
+@Component
 public interface UserMapper extends BaseMapper<User> {
 
     /**

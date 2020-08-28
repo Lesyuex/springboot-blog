@@ -57,7 +57,7 @@ public class MetaController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Meta meta) {
-        return metaService.save(meta) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return metaService.save(meta) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -68,7 +68,7 @@ public class MetaController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Meta meta) {
-        return metaService.updateById(meta) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return metaService.updateById(meta) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -79,7 +79,7 @@ public class MetaController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Meta> delete(@PathVariable Integer id) {
-        return metaService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return metaService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -88,8 +88,8 @@ public class MetaController extends BaseController {
      * @param meta meta
      * @return 列表数据
      */
-    @GetMapping("/list")
-    public JsonResultVO<Object> list(Page<Meta> page, Meta meta) {
+    @GetMapping("/listByPage")
+    public JsonResultVO<Object> listByPage(Page<Meta> page, Meta meta) {
         LambdaQueryWrapper<Meta> queryWrapper = new QueryWrapper<Meta>().lambda();
         if (meta.getId() != null) {
             queryWrapper.eq(Meta::getId, meta.getId());

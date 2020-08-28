@@ -14,11 +14,11 @@ public enum ResultEnum {
     /**
      * 正常
      */
-    NO_ERROR(200, "操作成功！"),
+    SUCCESS(200, "操作成功！"),
     /**
      * 操作失败
      */
-    ERROR(400, "操作失败！"),
+    FAIL(400, "操作失败！"),
     /**
      * 服务器内部错误
      */
@@ -30,15 +30,15 @@ public enum ResultEnum {
     /**
      * 未登录
      */
-    USER_NOT_LOGIN(504, "未登录"),
+    USER_NOT_LOGIN(502, "未登录"),
+    /**
+     * Token过期或者无效
+     */
+    USER_TOKEN_INVALID(504, "用户登录无效或已过期！"),
     /**
      * 登录失败
      */
     USER_LOGIN_FAIL(505, "请检查用户名或用户密码！"),
-    /**
-     * Token过期或者无效
-     */
-    USER_TOKEN_INVALID(502, "用户登录无效或已过期！"),
     /**
      * 没有权限
      */

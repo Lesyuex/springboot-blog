@@ -22,8 +22,8 @@ public class StringUtils {
      * @param val 对象
      * @return boolean值
      */
-    public static boolean isNullOrEmpty(String val) {
-        return val == null || val.length() == 0;
+    public static boolean isNullOrEmpty(Object val) {
+        return val == null || val.toString().length() == 0;
     }
 
     /**
@@ -32,7 +32,7 @@ public class StringUtils {
      * @param val 对象
      * @return boolean值
      */
-    public static boolean notNullAndEmpty(String val) {
+    public static boolean notNullAndEmpty(Object val) {
         return !isNullOrEmpty(val);
     }
 
@@ -43,8 +43,8 @@ public class StringUtils {
      * @param defaultValue 默认值
      * @return 字符串
      */
-    public static String getValue(String val, String defaultValue) {
-        return isNullOrEmpty(val) ? defaultValue : val;
+    public static String getValue(Object val, String defaultValue) {
+        return isNullOrEmpty(val) ? defaultValue : val.toString();
     }
 
     /**

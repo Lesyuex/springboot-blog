@@ -57,7 +57,7 @@ public class BlogController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Blog blog) {
-        return blogService.save(blog) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return blogService.save(blog) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -81,7 +81,7 @@ public class BlogController extends BaseController {
             RedisHelper.remove(key);
             return new JsonResultVO<>();
         } else {
-            return new JsonResultVO<>(ResultEnum.ERROR);
+            return new JsonResultVO<>(ResultEnum.FAIL);
         }
     }
 
@@ -93,6 +93,6 @@ public class BlogController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Object> delete(@PathVariable Integer id) {
-        return blogService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return blogService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 }

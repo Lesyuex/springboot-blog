@@ -56,7 +56,7 @@ public class ArticleController extends BaseController {
      */
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody Article article) {
-        return articleService.save(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleService.save(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ArticleController extends BaseController {
      */
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody Article article) {
-        return articleService.updateById(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleService.updateById(article) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ArticleController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResultVO<Article> delete(@PathVariable Integer id) {
-        return articleService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.ERROR);
+        return articleService.removeById(id) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ArticleController extends BaseController {
      * @param article article
      * @return 列表数据
      */
-    @GetMapping("/list")
+    @GetMapping("/listByPage")
     public JsonResultVO<Object> listByPage(Page<Article> page, Article article) {
         LambdaQueryWrapper<Article> queryWrapper = new QueryWrapper<Article>().lambda();
         try {
