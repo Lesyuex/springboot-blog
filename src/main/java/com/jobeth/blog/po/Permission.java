@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -23,6 +24,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_menu_permission")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,12 +33,12 @@ public class Permission implements Serializable {
      * 权限id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 父级id
      */
-    private Integer parentId;
+    private Long parentId;
 
     /**
      * 权限名
@@ -55,6 +57,8 @@ public class Permission implements Serializable {
      * 资源路径或路由路径
      */
     private String path;
+
+    private String method;
 
     /**
      * 资源对应权限
@@ -95,5 +99,7 @@ public class Permission implements Serializable {
      * 状态 0启用 1禁用
      */
     private Integer status;
+
+    private String remark;
 
 }

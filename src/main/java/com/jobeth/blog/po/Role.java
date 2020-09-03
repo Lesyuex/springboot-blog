@@ -33,7 +33,7 @@ public class Role implements Serializable {
      * 角色id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 角色名

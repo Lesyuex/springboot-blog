@@ -1,9 +1,7 @@
 package com.jobeth.blog.dto;
 
 
-import lombok.Builder;
 import lombok.Data;
-
 /**
  * Desc
  *
@@ -11,7 +9,6 @@ import lombok.Data;
  * @since 2020/8/2 0:23
  */
 @Data
-@Builder
 public class PermissionDTO {
 
     /**
@@ -33,4 +30,7 @@ public class PermissionDTO {
 
     private Long userId;
     private Long roleId;
+
+    public PermissionDTO() {
+    }
 }

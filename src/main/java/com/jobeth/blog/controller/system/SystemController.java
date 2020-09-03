@@ -16,6 +16,9 @@ import com.jobeth.blog.vo.JsonResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Desc
@@ -39,7 +42,7 @@ public class SystemController extends BaseController {
     }
 
     @GetMapping("/login")
-    public JsonResultVO<String> login( UserDTO userDTO) {
+    public JsonResultVO<String> login(UserDTO userDTO) {
         log.info("【 用户登录-{} 】", JacksonUtil.objectToJson(userDTO));
         User user = userService.getOne(new QueryWrapper<User>().eq("username", userDTO.getUsername()));
         //用户不存在或密码不一致

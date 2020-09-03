@@ -30,12 +30,12 @@ common:
   jwt-tokenName: BLOG-TOKEN
   #jwt 前缀
   jwt-token-prefix: Jobeth_Blog_
-  #jwt 过期时间
-  jwt-expiration: 3000000
-  #jwt 刷新时间
-  jwt-refresh-time: 60000
+  #jwt 有效时间 秒
+  jwt-expiration: 1800000
+  #jwt 剩余的有效时间
+  jwt-refresh-time: 1200000
   #jwt 不拦截的请求
-  ant-matcher: /sys/login,/sys/logout,
+  ant-matcher: /sys/login,/sys/logout,/swagger-ui.html,/swagger/**,/webjars/**,/swagger-resources/**,/v2/**,/static/**
   #系统权限配置缓存Redis key
   redis-url-perm-key: redis_url_perm
   #系统 根菜单标志

@@ -39,7 +39,6 @@ public class UserDTO implements Serializable {
 
     private Integer status;
 
-    private Long[] rolesList;
-
+    private Long[] roleList;
 
 }

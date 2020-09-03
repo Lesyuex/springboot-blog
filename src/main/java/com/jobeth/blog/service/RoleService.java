@@ -18,8 +18,16 @@ public interface RoleService extends IService<Role> {
 
     /**
      * listAll
+     *
      * @param roleDTO roleDTO
-     * @return  List<Role>
+     * @return List<Role>
      */
     List<Role> listAll(RoleDTO roleDTO);
+
+    /**
+     * 更新角色菜单
+     *
+     * @param roleDTO roleDTO
+     */
+    void updateRole(RoleDTO roleDTO);
 }

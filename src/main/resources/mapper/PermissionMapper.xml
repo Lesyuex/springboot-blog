@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jobeth.blog.mapper.PermissionMapper">
-    <select id="listByPermissionDTO" parameterType="com.jobeth.blog.dto.PermissionDTO"
+    <select id="listPermission" parameterType="com.jobeth.blog.dto.PermissionDTO"
+            resultType="com.jobeth.blog.po.Permission">
+        SELECT
+        p.id,
+        p.parent_id,
+        p.name,
+        p.redirect,
+        p.path,
+        p.method,
+        p.perm,
+        p.title,
+        p.component,
+        p.icon
+        from t_menu_permission p
+        <if test="userId!=null and userId!='' and (roleId ==null or roleId =='')">
+            LEFT JOIN t_roles_menus_permissions rp ON p.id = rp.perm_id
+            LEFT JOIN t_users_roles ur ON rp.role_id = ur.role_id
+            where ur.user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="roleId !=null and roleId !='' and (userId==null or userId=='') ">
+            LEFT JOIN t_roles_menus_permissions rp ON p.id = rp.perm_id
+            where rp.role_id = #{roleId,jdbcType=INTEGER}
+        </if>
+        <if test="type !=null">
+            and p.type = #{type,jdbcType=TINYINT}
+        </if>
+        <if test="status !=null">
+            and p.status = #{status,jdbcType=TINYINT}
+        </if>
+        order by p.sort_id
+    </select>
+
+    <select id="listRolePermission" parameterType="com.jobeth.blog.dto.PermissionDTO"
             resultType="com.jobeth.blog.po.Permission">
         SELECT
         p.id,
@@ -15,21 +47,15 @@
         p.icon
         from t_menu_permission p
         LEFT JOIN t_roles_menus_permissions rp ON p.id = rp.perm_id
-        LEFT JOIN t_users_roles ur ON rp.role_id = ur.role_id
-        <where>
-            <if test="userId !=null and userId !=''">
-                and ur.user_id = #{userId,jdbcType=INTEGER}
-            </if>
-            <if test="url !=null and url !=''">
-                and p.url = #{url,jdbcType=VARCHAR}
-            </if>
-            <if test="type !=null">
-                and p.type = #{type,jdbcType=TINYINT}
-            </if>
-            <if test="status !=null">
-                and p.status = #{status,jdbcType=TINYINT}
-            </if>
-        </where>
+        where rp.role_id = #{roleId,jdbcType=INTEGER}
+        <if test="type !=null">
+            and p.type = #{type,jdbcType=TINYINT}
+        </if>
+        <if test="status !=null">
+            and p.status = #{status,jdbcType=TINYINT}
+        </if>
         order by p.sort_id
     </select>
+
+
 </mapper>

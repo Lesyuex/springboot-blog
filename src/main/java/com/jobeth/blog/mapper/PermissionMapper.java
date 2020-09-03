@@ -5,6 +5,7 @@ import com.jobeth.blog.dto.PermissionDTO;
 import com.jobeth.blog.po.Permission;
 
 import java.util.List;
+
 /**
  * <p>
  * Mapper 接口
@@ -16,10 +17,18 @@ import java.util.List;
 public interface PermissionMapper extends BaseMapper<Permission> {
 
     /**
-     * 查询权限
+     * 获取用户权限或者用户菜单
      *
-     * @param dto dto
+     * @param permissionDTO permissionDTO
      * @return List<Permission>
      */
-    List<Permission> listByPermissionDTO(PermissionDTO dto);
+    List<Permission> listPermission(PermissionDTO permissionDTO);
+
+    /**
+     * 获取用户权限或者用户菜单
+     *
+     * @param permissionDTO permissionDTO
+     * @return List<Permission>
+     */
+    List<Permission> listRolePermission(PermissionDTO permissionDTO);
 }

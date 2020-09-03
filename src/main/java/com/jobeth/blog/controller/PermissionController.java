@@ -13,9 +13,11 @@ import com.jobeth.blog.common.properties.BlogProperties;
 import com.jobeth.blog.dto.PermissionDTO;
 import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.service.PermissionService;
+import com.jobeth.blog.vo.PermissionVO;
 import com.jobeth.blog.vo.RouteMetaVO;
 import com.jobeth.blog.vo.RouteVO;
 import com.jobeth.blog.vo.JsonResultVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/permission")
+@Slf4j
 public class PermissionController extends BaseController {
     private final BlogProperties properties;
     private final PermissionService permissionService;
@@ -110,8 +113,12 @@ public class PermissionController extends BaseController {
         return resultVO;
     }
 
-
-    @GetMapping("/listCurrentUserRoutes")
+    /**
+     * 获取用户菜单
+     *
+     * @return 用户菜单
+     */
+    @GetMapping("/listCurrentUserMenu")
     public JsonResultVO<Object> listCurrentUserRoutes() {
         String token = httpServletRequest.getHeader(properties.getJwtTokenName());
         String[] strings = token.split(properties.getJwtTokenPrefix());
@@ -119,8 +126,11 @@ public class PermissionController extends BaseController {
         if (userId == null) {
             throw new ServerException(ResultEnum.USER_TOKEN_INVALID);
         }
-        PermissionDTO dto = PermissionDTO.builder().userId(Long.parseLong(userId)).status(1).type(1).build();
-        List<Permission> permissions = permissionService.listByPermissionDTO(dto);
+        PermissionDTO permissionDTO = new PermissionDTO();
+        permissionDTO.setStatus(1);
+        permissionDTO.setType(1);
+        permissionDTO.setUserId(Long.parseLong(userId));
+        List<Permission> permissions = permissionService.listPermission(permissionDTO);
         List<RouteVO> routeVOList = new ArrayList<>();
         for (Permission item : permissions) {
             RouteVO routeVO = new RouteVO();
@@ -133,7 +143,54 @@ public class PermissionController extends BaseController {
             routeVO.setMeta(meta);
             routeVOList.add(routeVO);
         }
+        System.out.println(JacksonUtil.objectToJson(routeVOList));
         List<RouteVO> treeVOList = TreeUtil.generateTree(routeVOList, properties.getRootMenuId());
+        System.out.println(JacksonUtil.objectToJson(treeVOList));
         return new JsonResultVO<>(treeVOList);
     }
+
+    /**
+     * 获取系统总菜单或者总权限
+     *
+     * @return 系统总菜单
+     */
+    @GetMapping("/listTreePermission")
+    public JsonResultVO<Object> listTreePermission(Permission permission) {
+        JsonResultVO<Object> resultVO = new JsonResultVO<>();
+        LambdaQueryWrapper<Permission> eq = new QueryWrapper<Permission>().lambda().eq(Permission::getType, permission.getType()).eq(Permission::getStatus, 1);
+        List<Permission> list = permissionService.list(eq);
+        if (permission.getType() == 1) {
+            List<RouteVO> routeList = new ArrayList<>();
+            for (Permission item : list) {
+                RouteVO routeVO = new RouteVO();
+                BeanUtils.copyProperties(item, routeVO);
+                routeList.add(routeVO);
+            }
+            List<RouteVO> treeMenu = TreeUtil.generateTree(routeList, properties.getRootMenuId());
+            resultVO.setData(treeMenu);
+        } else if (permission.getType() == 0) {
+            List<PermissionVO> permissionVOList = new ArrayList<>();
+            for (Permission item : list) {
+                PermissionVO permissionVO = new PermissionVO();
+                BeanUtils.copyProperties(item, permissionVO);
+               permissionVOList.add(permissionVO);
+            }
+            List<PermissionVO> treeMenu = TreeUtil.generateTree(permissionVOList, properties.getRootMenuId());
+            resultVO.setData(treeMenu);
+        }
+        return resultVO;
+    }
+
+    /**
+     *
+     * @param permissionDTO  ‘’
+     * @return ‘’
+     */
+    @GetMapping("/listPermission")
+    public JsonResultVO<Object> listPermission(PermissionDTO permissionDTO) {
+        System.out.println(JacksonUtil.objectToJson(permissionDTO));
+        List<Permission> permissions = permissionService.listPermission(permissionDTO);
+        return new JsonResultVO<>(permissions);
+    }
+
 }

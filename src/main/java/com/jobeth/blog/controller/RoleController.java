@@ -9,17 +9,22 @@ import com.jobeth.blog.common.enums.ResultEnum;
 import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.utils.JacksonUtil;
 import com.jobeth.blog.common.utils.StringUtils;
+import com.jobeth.blog.dto.PermissionDTO;
 import com.jobeth.blog.dto.RoleDTO;
+import com.jobeth.blog.po.Permission;
 import com.jobeth.blog.po.Role;
+import com.jobeth.blog.service.PermissionService;
 import com.jobeth.blog.service.RoleService;
 import com.jobeth.blog.vo.JsonResultVO;
 import com.jobeth.blog.vo.RoleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,9 +41,11 @@ import java.util.List;
 public class RoleController {
 
     private final RoleService roleService;
+    private final PermissionService permissionService;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, PermissionService permissionService) {
         this.roleService = roleService;
+        this.permissionService = permissionService;
     }
 
     /**
@@ -71,12 +78,22 @@ public class RoleController {
     /**
      * 更新
      *
-     * @param role role
+     * @param roleDTO roleDTO
      * @return 更新结果
      */
     @PutMapping("/update")
-    public JsonResultVO<Object> update(@RequestBody Role role) {
-        return roleService.updateById(role) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
+    public JsonResultVO<Object> update(@RequestBody RoleDTO roleDTO) {
+        try {
+            //管理员信息不允许修改
+            if (roleDTO.getId() == 1) {
+                return new JsonResultVO<>(ResultEnum.FAIL.getCode(), "不允许修改管理员信息");
+            }
+            roleService.updateRole(roleDTO);
+            return new JsonResultVO<>();
+        } catch (Exception e) {
+            log.error("【 更新角色信息发生错误 】", e);
+            return new JsonResultVO<>(ResultEnum.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -104,21 +121,38 @@ public class RoleController {
         BeanUtils.copyProperties(rolePage, roleVoPage);
         List<RoleVO> roleVOList = new ArrayList<>();
         List<Role> roleList = rolePage.getRecords();
-        for (Role role1 : roleList) {
+        for (Role role : roleList) {
             RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role1, roleVO);
-            roleVO.setLabel(role1.getName());
-            roleVO.setValue(StringUtils.getValue(role1.getId(), null));
+            BeanUtils.copyProperties(role, roleVO);
+            roleVO.setLabel(role.getName());
+            roleVO.setValue(StringUtils.getValue(role.getId(), null));
+            PermissionDTO permissionDTO = new PermissionDTO();
+            permissionDTO.setRoleId(role.getId());
+            permissionDTO.setType(1);
+            //菜单
+            List<Permission> menuList = permissionService.listPermission(permissionDTO);
+            roleVO.setMenuIdList(menuList.stream().map(Permission::getId).toArray(Long[]::new));
+            //权限
+            permissionDTO.setType(0);
+            List<Permission> permList = permissionService.listPermission(permissionDTO);
+            roleVO.setPermIdList(permList.stream().map(Permission::getId).toArray(Long[]::new));
             roleVOList.add(roleVO);
         }
         roleVoPage.setRecords(roleVOList);
-        log.info(JacksonUtil.objectToJson(roleVoPage));
         return new JsonResultVO<>(roleVoPage);
     }
 
     @GetMapping("/listAll")
     public JsonResultVO<Object> list(RoleDTO roleDTO) {
-
-        return new JsonResultVO<>();
+        List<Role> roleList = roleService.listAll(roleDTO);
+        List<RoleVO> roleVOList = new ArrayList<>();
+        for (Role role : roleList) {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(role, roleVO);
+            roleVO.setLabel(role.getName());
+            roleVO.setValue(StringUtils.getValue(role.getId(), null));
+            roleVOList.add(roleVO);
+        }
+        return new JsonResultVO<>(roleVOList);
     }
 }

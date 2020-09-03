@@ -16,8 +16,7 @@ public class RoleDTO {
     /**
      * 角色id
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 角色名
@@ -31,5 +30,11 @@ public class RoleDTO {
 
     private Boolean enabled;
 
+    private Integer status;
+
     private Long userId;
+
+    private Long[] menuIdList;
+
+    private Long[] permIdList;
 }

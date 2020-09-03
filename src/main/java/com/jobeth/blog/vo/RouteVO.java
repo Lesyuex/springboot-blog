@@ -20,14 +20,13 @@ public class RouteVO implements TreeVO<RouteVO> {
     /**
      * 权限id
      */
-    @JsonIgnore
-    private Integer id;
+    private Long id;
 
     /**
      * 路由名字
      */
     private String name;
-
+    private String title;
     /**
      * 重定向路径
      */
@@ -42,7 +41,7 @@ public class RouteVO implements TreeVO<RouteVO> {
      * 父级id
      */
     @JsonIgnore
-    private Integer parentId;
+    private Long parentId;
 
     private Boolean hidden;
 
@@ -59,13 +58,13 @@ public class RouteVO implements TreeVO<RouteVO> {
     private List<RouteVO> children;
 
     @Override
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
 
     @Override
-    public Integer getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 

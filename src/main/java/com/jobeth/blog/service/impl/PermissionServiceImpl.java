@@ -20,9 +20,15 @@ import java.util.List;
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements PermissionService {
 
+    @Override
+    public List<Permission> listPermission(PermissionDTO permissionDTO) {
+        return baseMapper.listPermission(permissionDTO);
+    }
 
     @Override
-    public List<Permission> listByPermissionDTO(PermissionDTO dto) {
-        return baseMapper.listByPermissionDTO(dto);
+    public List<Permission> listRolePermission(PermissionDTO permissionDTO) {
+        return baseMapper.listRolePermission(permissionDTO);
     }
+
+
 }

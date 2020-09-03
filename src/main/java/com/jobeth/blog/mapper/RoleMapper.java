@@ -36,8 +36,24 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     /**
      * listAll
+     *
      * @param roleDTO roleDTO
-     * @return  List<Role>
+     * @return List<Role>
      */
     List<Role> listAll(RoleDTO roleDTO);
+
+    /**
+     * 删除角色菜单
+     *
+     * @param roleId roleId
+     */
+    void deleteRoleMenuAndPermByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 插入角色菜单
+     *
+     * @param roleId roleId
+     * @param menuId menuId
+     */
+    void insertRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
 }

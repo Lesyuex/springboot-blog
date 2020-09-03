@@ -63,16 +63,16 @@ public class ShiroConfig {
 
         //自定义过滤器
         Map<String, Filter> filterMap = new HashMap<>(16);
-        filterMap.put("jwt", new JwtFilter(redisService, permissionService,properties));
+        filterMap.put("jwt", new JwtFilter(redisService, permissionService, properties));
         shiroFilter.setFilters(filterMap);
 
         // 配置不会被拦截的链接 顺序判断
         LinkedHashMap<String, String> authMap = new LinkedHashMap<>(8);
         //不需要拦截的接口
         String[] antMatcher = properties.getAntMatcher().split(",");
-        if (antMatcher.length>0){
+        if (antMatcher.length > 0) {
             for (String s : antMatcher) {
-                authMap.put(s,"anon");
+                authMap.put(s, "anon");
             }
         }
         authMap.put("/**", "jwt");

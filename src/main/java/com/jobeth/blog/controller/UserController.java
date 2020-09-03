@@ -2,25 +2,26 @@ package com.jobeth.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 
+import com.jobeth.blog.common.utils.JacksonUtil;
 import com.jobeth.blog.common.utils.StringUtils;
 import com.jobeth.blog.dto.UserDTO;
-import com.jobeth.blog.po.Role;
 import com.jobeth.blog.po.User;
 import com.jobeth.blog.service.RoleService;
 import com.jobeth.blog.service.UserService;
 import com.jobeth.blog.vo.JsonResultVO;
 import com.jobeth.blog.vo.UserVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.models.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.ServerException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@Api(value = "用户controller", tags = {"用户操作接口"})
 public class UserController extends BaseController {
     private final UserService userService;
     private final RoleService roleService;
@@ -67,6 +69,7 @@ public class UserController extends BaseController {
      * @param user user
      * @return 结果
      */
+    @ApiOperation(value = "保存用户", tags = {"用户操作接口"},httpMethod = "POST", response = JsonResultVO.class)
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody User user) {
         return userService.save(user) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
@@ -81,10 +84,12 @@ public class UserController extends BaseController {
     @PutMapping("/update")
     public JsonResultVO<Object> update(@RequestBody UserDTO userDTO) {
         try {
+            log.info("{}", JacksonUtil.objectToJson(userDTO));
             userService.updateUserAndUserRole(userDTO);
             return new JsonResultVO<>();
         } catch (Exception e) {
-            return new JsonResultVO<>(ResultEnum.FAIL.getCode(),"更新失败");
+            log.error("【 更新用户信息发生错误 】", e);
+            return new JsonResultVO<>(ResultEnum.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -100,6 +105,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/listByPage")
+    @ApiOperation(value = "获取用户列表", httpMethod = "GET",tags = {"用户操作接口"}, notes = "获取用户列表", response = JsonResultVO.class)
     public JsonResultVO<Object> listByPage(Page<User> page, User user) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda();
         if (StringUtils.notNullAndEmpty(user.getUsername())) {

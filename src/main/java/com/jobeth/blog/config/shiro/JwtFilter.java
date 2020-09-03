@@ -110,6 +110,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         //生成Token认证的信息
         CustomToken customToken = (CustomToken) createToken(request, response);
         Subject subject = getSubject(request, response);
@@ -123,6 +124,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 //存进redis
                 String redisKey = properties.getJwtTokenPrefix() + userId;
                 redisService.setExpire(redisKey, newToken, properties.getJwtExpiration());
+                //告知前端最新Token
+                httpServletResponse.setHeader("REFRESH-BLOG-TOKEN", newToken);
                 log.info("【 userId:{}- 凭证刷新，更新完成 】", userId);
             }
             return onLoginSuccess(customToken, subject, request, response);

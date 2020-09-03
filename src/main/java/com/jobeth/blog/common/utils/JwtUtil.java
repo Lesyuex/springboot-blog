@@ -96,6 +96,7 @@ public class JwtUtil {
         Claims claims = parseToken(token);
         if (claims != null) {
             Date expiration = claims.getExpiration();
+            log.info("【 Token 剩余 {} s ,小于 {} s 刷新 】", (expiration.getTime() - Clock.systemDefaultZone().millis()) / 1000, PROPERTIES.getJwtRefreshTime() / 1000);
             return (expiration.getTime() - Clock.systemDefaultZone().millis()) <= PROPERTIES.getJwtRefreshTime();
         }
         return false;

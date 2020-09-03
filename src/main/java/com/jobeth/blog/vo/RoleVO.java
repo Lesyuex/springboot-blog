@@ -21,7 +21,7 @@ public class RoleVO {
     /**
      * 角色id
      */
-    private Integer id;
+    private Long id;
 
     /**
      * 角色名
@@ -60,5 +60,9 @@ public class RoleVO {
      * 备注
      */
     private String value;
+
+    private Long[] menuIdList;
+
+    private Long[] permIdList;
 
 }

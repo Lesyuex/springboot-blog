@@ -3,6 +3,7 @@ package com.jobeth.blog.service;
 import com.jobeth.blog.dto.PermissionDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jobeth.blog.po.Permission;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,11 +18,18 @@ import java.util.List;
 public interface PermissionService extends IService<Permission> {
 
     /**
-     * List<Permission>查询
+     * 获取用户权限或者用户菜单
      *
-     * @param dto PermissionDTO
+     * @param permissionDTO permissionDTO
      * @return List<Permission>
      */
-    List<Permission> listByPermissionDTO(PermissionDTO dto);
+    List<Permission> listPermission(PermissionDTO permissionDTO);
 
+    /**
+     * 获取用户权限或者用户菜单
+     *
+     * @param permissionDTO permissionDTO
+     * @return List<Permission>
+     */
+    List<Permission> listRolePermission(PermissionDTO permissionDTO);
 }

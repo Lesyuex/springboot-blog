@@ -46,24 +46,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userDTO.getId() == 1) {
             throw new ServerException("不允许修改管理员信息");
         }
-        try {
-            User user = new User();
-            BeanUtils.copyProperties(userDTO, user);
-            LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()
-                    .eq(User::getId, user.getId());
-            //更新用户
-            userMapper.update(user, update);
-            Long[] roleList = userDTO.getRolesList();
-            if (roleList != null) {
-                //更新角色
-                roleMapper.deleteRoleByUserId(user.getId());
-                for (Long roleId : roleList) {
-                    roleMapper.insertUserRole(user.getId(), roleId);
-                }
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()
+                .eq(User::getId, user.getId());
+        //更新用户
+        userMapper.update(user, update);
+        Long[] roleList = userDTO.getRoleList();
+        if (roleList != null) {
+            //更新角色
+            roleMapper.deleteRoleByUserId(user.getId());
+            for (Long roleId : roleList) {
+                roleMapper.insertUserRole(user.getId(), roleId);
             }
-        } catch (Exception e) {
-            log.error("【 更新用户信息发生错误 】", e);
-            throw new ServerException(ResultEnum.FAIL, "更新用户信息发生错误");
         }
     }
 }
