@@ -43,9 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public void updateUserAndUserRole(UserDTO userDTO) {
         //管理员信息不允许修改
-        if (userDTO.getId() == 1) {
-            throw new ServerException("不允许修改管理员信息");
-        }
+
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
         LambdaUpdateWrapper<User> update = new UpdateWrapper<User>().lambda()

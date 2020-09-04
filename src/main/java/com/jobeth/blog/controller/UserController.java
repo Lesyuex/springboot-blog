@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jobeth.blog.common.enums.ResultEnum;
 
+import com.jobeth.blog.common.exception.ServerException;
 import com.jobeth.blog.common.utils.JacksonUtil;
 import com.jobeth.blog.common.utils.StringUtils;
 import com.jobeth.blog.dto.UserDTO;
@@ -69,7 +70,7 @@ public class UserController extends BaseController {
      * @param user user
      * @return 结果
      */
-    @ApiOperation(value = "保存用户", tags = {"用户操作接口"},httpMethod = "POST", response = JsonResultVO.class)
+    @ApiOperation(value = "保存用户", tags = {"用户操作接口"}, httpMethod = "POST", response = JsonResultVO.class)
     @PostMapping("/save")
     public JsonResultVO<Object> save(@RequestBody User user) {
         return userService.save(user) ? new JsonResultVO<>() : new JsonResultVO<>(ResultEnum.FAIL);
@@ -85,6 +86,9 @@ public class UserController extends BaseController {
     public JsonResultVO<Object> update(@RequestBody UserDTO userDTO) {
         try {
             log.info("{}", JacksonUtil.objectToJson(userDTO));
+            if (userDTO.getId() == 1) {
+                return new JsonResultVO<>(ResultEnum.FAIL.getCode(), "不允许修改管理员信息");
+            }
             userService.updateUserAndUserRole(userDTO);
             return new JsonResultVO<>();
         } catch (Exception e) {
@@ -105,7 +109,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/listByPage")
-    @ApiOperation(value = "获取用户列表", httpMethod = "GET",tags = {"用户操作接口"}, notes = "获取用户列表", response = JsonResultVO.class)
+    @ApiOperation(value = "获取用户列表", httpMethod = "GET", tags = {"用户操作接口"}, notes = "获取用户列表", response = JsonResultVO.class)
     public JsonResultVO<Object> listByPage(Page<User> page, User user) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda();
         if (StringUtils.notNullAndEmpty(user.getUsername())) {

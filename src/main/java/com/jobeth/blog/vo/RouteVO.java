@@ -57,6 +57,11 @@ public class RouteVO implements TreeVO<RouteVO> {
      */
     private List<RouteVO> children;
 
+    /**
+     * 排序
+     */
+    private Integer sortId;
+
     @Override
     public Long getId() {
         return id;

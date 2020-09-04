@@ -192,7 +192,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                         .lambda().eq(Permission::getType, 0)
                         .eq(Permission::getStatus, 1)
                         .groupBy(Permission::getPath)
-                        .orderByDesc(Permission::getSortId);
+                        .orderByDesc(Permission::getId);
                 List<Permission> permissionList = permissionService.list(wrapper);
                 for (Permission permission : permissionList) {
                     if (patternUrl(permission.getPath(), requestSource)) {

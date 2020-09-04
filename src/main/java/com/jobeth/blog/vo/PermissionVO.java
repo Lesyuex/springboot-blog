@@ -1,5 +1,6 @@
 package com.jobeth.blog.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.List;
  * @date Created by IntelliJ IDEA in 2020/8/14 17:24
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionVO implements TreeVO<PermissionVO> {
     private Long id;
 
@@ -38,7 +40,7 @@ public class PermissionVO implements TreeVO<PermissionVO> {
      * 资源路径或路由路径
      */
     private String path;
-
+    private String method;
     /**
      * 资源对应权限
      */
@@ -75,10 +77,12 @@ public class PermissionVO implements TreeVO<PermissionVO> {
      */
     private LocalDateTime updateTime;
     private List<PermissionVO> children;
+    private Boolean hasChildren;
     /**
      * 状态 0启用 1禁用
      */
     private Integer status;
+    private String remark;
 
     @Override
     public Object getId() {

@@ -157,9 +157,13 @@ public class PermissionController extends BaseController {
     @GetMapping("/listTreePermission")
     public JsonResultVO<Object> listTreePermission(Permission permission) {
         JsonResultVO<Object> resultVO = new JsonResultVO<>();
-        LambdaQueryWrapper<Permission> eq = new QueryWrapper<Permission>().lambda().eq(Permission::getType, permission.getType()).eq(Permission::getStatus, 1);
-        List<Permission> list = permissionService.list(eq);
+        LambdaQueryWrapper<Permission> eq = new QueryWrapper<Permission>().lambda()
+                .eq(Permission::getType, permission.getType())
+                .eq(Permission::getStatus, 1);
+        List<Permission> list = null;
         if (permission.getType() == 1) {
+            eq.orderByAsc(Permission::getSortId);
+            list = permissionService.list(eq);
             List<RouteVO> routeList = new ArrayList<>();
             for (Permission item : list) {
                 RouteVO routeVO = new RouteVO();
@@ -169,11 +173,13 @@ public class PermissionController extends BaseController {
             List<RouteVO> treeMenu = TreeUtil.generateTree(routeList, properties.getRootMenuId());
             resultVO.setData(treeMenu);
         } else if (permission.getType() == 0) {
+            eq.orderByDesc(Permission::getId);
+            list = permissionService.list(eq);
             List<PermissionVO> permissionVOList = new ArrayList<>();
             for (Permission item : list) {
                 PermissionVO permissionVO = new PermissionVO();
                 BeanUtils.copyProperties(item, permissionVO);
-               permissionVOList.add(permissionVO);
+                permissionVOList.add(permissionVO);
             }
             List<PermissionVO> treeMenu = TreeUtil.generateTree(permissionVOList, properties.getRootMenuId());
             resultVO.setData(treeMenu);
@@ -182,8 +188,7 @@ public class PermissionController extends BaseController {
     }
 
     /**
-     *
-     * @param permissionDTO  ‘’
+     * @param permissionDTO ‘’
      * @return ‘’
      */
     @GetMapping("/listPermission")
